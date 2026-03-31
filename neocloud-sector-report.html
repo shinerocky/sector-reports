@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neocloud Sector Overview — Q1 2026</title>
+<style>
+  :root {
+    --bg: #0a0c10;
+    --card: #13161f;
+    --border: #1f2331;
+    --accent: #8b5cf6;
+    --accent2: #06b6d4;
+    --green: #10b981;
+    --red: #ef4444;
+    --amber: #f59e0b;
+    --orange: #f97316;
+    --text: #d1d5db;
+    --muted: #6b7280;
+    --heading: #f3f4f6;
+    --glow: rgba(139,92,246,0.08);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, #1a0533 0%, #0d1117 40%, #091018 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 64px 40px 52px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(ellipse at 30% 50%, rgba(139,92,246,0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 50%, rgba(6,182,212,0.04) 0%, transparent 50%);
+  }
+  .hero * { position: relative; }
+  .hero h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #a78bfa, #06b6d4, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 14px;
+    letter-spacing: -1.5px;
+  }
+  .hero .subtitle { font-size: 1.15rem; color: var(--muted); max-width: 750px; margin: 0 auto 24px; }
+  .badge { display: inline-block; background: rgba(139,92,246,0.12); border: 1px solid rgba(139,92,246,0.25); padding: 5px 16px; border-radius: 20px; font-size: 0.82rem; color: #c4b5fd; margin: 0 4px; }
+
+  .container { max-width: 1220px; margin: 0 auto; padding: 44px 24px; }
+
+  /* Verdict */
+  .verdict {
+    background: linear-gradient(135deg, rgba(249,115,22,0.1), rgba(249,115,22,0.02));
+    border: 1px solid rgba(249,115,22,0.2);
+    border-radius: 16px;
+    padding: 36px 40px;
+    margin-bottom: 52px;
+    text-align: center;
+  }
+  .verdict h2 { font-size: 1.55rem; color: var(--orange); margin-bottom: 14px; }
+  .verdict p { font-size: 1.02rem; color: var(--text); max-width: 850px; margin: 0 auto; }
+
+  /* KPI */
+  .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 52px; }
+  .kpi { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 22px; text-align: center; }
+  .kpi .label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1.2px; color: var(--muted); margin-bottom: 6px; }
+  .kpi .value { font-size: 1.85rem; font-weight: 700; color: var(--heading); }
+  .kpi .delta { font-size: 0.82rem; margin-top: 3px; }
+  .kpi .delta.up { color: var(--green); }
+  .kpi .delta.down { color: var(--red); }
+  .kpi .delta.warn { color: var(--amber); }
+
+  /* Sections */
+  section { margin-bottom: 56px; }
+  section > h2 { font-size: 1.6rem; font-weight: 700; color: var(--heading); padding-bottom: 12px; border-bottom: 2px solid var(--accent); display: inline-block; margin-bottom: 6px; }
+  .section-intro { color: var(--muted); margin: 10px 0 24px; font-size: 0.93rem; }
+
+  /* Cards */
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 18px; margin-top: 18px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 28px; transition: border-color 0.2s, box-shadow 0.2s; }
+  .card:hover { border-color: var(--accent); box-shadow: 0 0 24px var(--glow); }
+  .card h3 { font-size: 1.12rem; color: var(--heading); margin-bottom: 10px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .card p, .card li { font-size: 0.9rem; color: var(--text); }
+  .card ul { padding-left: 18px; margin-top: 8px; }
+  .card li { margin-bottom: 6px; }
+  .tag { display: inline-block; font-size: 0.68rem; padding: 3px 10px; border-radius: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
+  .tag.bull { background: rgba(16,185,129,0.15); color: var(--green); }
+  .tag.bear { background: rgba(239,68,68,0.15); color: var(--red); }
+  .tag.mixed { background: rgba(245,158,11,0.15); color: var(--amber); }
+  .tag.info { background: rgba(139,92,246,0.15); color: #a78bfa; }
+  .tag.ipo { background: rgba(6,182,212,0.15); color: var(--accent2); }
+
+  /* Company Profile Card (CoreWeave deep dive) */
+  .profile-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 36px; margin-top: 20px; }
+  .profile-card h3 { font-size: 1.3rem; color: var(--heading); margin-bottom: 16px; }
+  .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  @media (max-width: 768px) { .profile-grid { grid-template-columns: 1fr; } }
+  .profile-section h4 { font-size: 0.92rem; color: var(--accent2); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.8px; }
+  .profile-section ul { padding-left: 16px; }
+  .profile-section li { font-size: 0.88rem; margin-bottom: 5px; color: var(--text); }
+
+  /* Bars */
+  .bar-chart { margin: 18px 0; }
+  .bar-row { display: flex; align-items: center; margin-bottom: 9px; }
+  .bar-label { width: 150px; font-size: 0.82rem; color: var(--muted); flex-shrink: 0; }
+  .bar-track { flex: 1; height: 28px; background: rgba(255,255,255,0.03); border-radius: 6px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 6px; display: flex; align-items: center; padding-left: 10px; font-size: 0.74rem; font-weight: 600; color: #fff; min-width: 40px; }
+  .bar-fill.crwv { background: linear-gradient(90deg, #8b5cf6, #6d28d9); }
+  .bar-fill.lambda { background: linear-gradient(90deg, #f59e0b, #d97706); }
+  .bar-fill.crusoe { background: linear-gradient(90deg, #10b981, #059669); }
+  .bar-fill.nebius { background: linear-gradient(90deg, #3b82f6, #2563eb); }
+  .bar-fill.openai { background: linear-gradient(90deg, #ec4899, #be185d); }
+  .bar-fill.hyper { background: linear-gradient(90deg, #6366f1, #4338ca); }
+  .bar-fill.other { background: linear-gradient(90deg, #6b7280, #4b5563); }
+
+  /* Table */
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.86rem; }
+  th { text-align: left; padding: 12px 14px; background: rgba(255,255,255,0.025); color: var(--muted); font-weight: 600; font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); }
+  td { padding: 11px 14px; border-bottom: 1px solid rgba(255,255,255,0.035); color: var(--text); }
+  tr:hover td { background: rgba(139,92,246,0.03); }
+
+  /* Risk gauge */
+  .gauge-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-top: 20px; }
+  .gauge-item { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; }
+  .gauge-item h4 { color: var(--heading); margin-bottom: 8px; font-size: 0.95rem; }
+  .gauge-bar { height: 8px; background: rgba(255,255,255,0.05); border-radius: 4px; margin: 10px 0 6px; overflow: hidden; }
+  .gauge-fill { height: 100%; border-radius: 4px; }
+  .gauge-fill.crit { background: var(--red); }
+  .gauge-fill.high { background: var(--orange); }
+  .gauge-fill.mid { background: var(--amber); }
+  .gauge-fill.low { background: var(--green); }
+  .gauge-meta { display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--muted); }
+
+  /* Comparison columns */
+  .vs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 20px; }
+  @media (max-width: 768px) { .vs-grid { grid-template-columns: 1fr; } }
+  .vs-col { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 28px; }
+  .vs-col h3 { margin-bottom: 14px; font-size: 1.08rem; }
+  .vs-col.neo h3 { color: var(--accent); }
+  .vs-col.hyper h3 { color: var(--accent2); }
+  .vs-col ul { padding-left: 16px; }
+  .vs-col li { margin-bottom: 8px; font-size: 0.9rem; }
+
+  /* Pricing timeline */
+  .price-timeline { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 28px; margin-top: 18px; }
+  .pt-row { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; }
+  .pt-period { width: 120px; font-size: 0.82rem; font-weight: 600; color: var(--accent2); flex-shrink: 0; }
+  .pt-bar { flex: 1; position: relative; }
+  .pt-bar-inner { height: 32px; border-radius: 6px; display: flex; align-items: center; padding-left: 12px; font-size: 0.8rem; font-weight: 600; color: #fff; }
+  .pt-bar-inner.hot { background: linear-gradient(90deg, #ef4444, #b91c1c); }
+  .pt-bar-inner.warm { background: linear-gradient(90deg, #f59e0b, #d97706); }
+  .pt-bar-inner.cool { background: linear-gradient(90deg, #10b981, #059669); }
+  .pt-bar-inner.cold { background: linear-gradient(90deg, #6b7280, #4b5563); }
+
+  /* Sources */
+  .sources { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 28px; margin-top: 36px; }
+  .sources h3 { color: var(--heading); margin-bottom: 12px; font-size: 0.95rem; }
+  .sources a { color: var(--accent2); text-decoration: none; font-size: 0.8rem; display: block; margin-bottom: 5px; }
+  .sources a:hover { text-decoration: underline; }
+
+  .footer { text-align: center; padding: 40px 20px; border-top: 1px solid var(--border); margin-top: 40px; }
+  .footer p { font-size: 0.78rem; color: var(--muted); }
+
+  @media (max-width: 640px) {
+    .hero h1 { font-size: 2rem; }
+    .hero { padding: 40px 20px 30px; }
+    .cards { grid-template-columns: 1fr; }
+    .kpi-row { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>Neocloud Sector Overview</h1>
+  <p class="subtitle">GPU-as-a-Service, AI infrastructure challengers, and the trillion-dollar question: can debt-fueled GPU empires survive the hyperscaler counter-attack?</p>
+  <div>
+    <span class="badge">March 30, 2026</span>
+    <span class="badge">CoreWeave | Lambda | Crusoe | Nebius</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- VERDICT -->
+<div class="verdict">
+  <h2>Verdict: Explosive Growth, Existential Fragility</h2>
+  <p>The neocloud sector is growing at <strong>200%+ per year</strong> and is projected to reach <strong>$180B by 2030</strong>. But the business model — borrowing billions against depreciating GPUs to rent them to a handful of hyperscaler customers — faces a reckoning. H100 rental rates have collapsed 60-75% from peak, a <strong>$4.2B debt wall</strong> hits CoreWeave in 2026, and the hyperscalers are building custom chips to eliminate GPU dependency entirely. This is either the birth of a new cloud tier or the most spectacular capital misallocation since WeWork.</p>
+</div>
+
+<!-- KPIs -->
+<div class="kpi-row">
+  <div class="kpi">
+    <div class="label">2026E Market Size</div>
+    <div class="value">$35B</div>
+    <div class="delta up">+46% YoY</div>
+  </div>
+  <div class="kpi">
+    <div class="label">2030E Revenue</div>
+    <div class="value">$180B</div>
+    <div class="delta up">69% CAGR</div>
+  </div>
+  <div class="kpi">
+    <div class="label">CoreWeave Revenue</div>
+    <div class="value">$5.1B</div>
+    <div class="delta up">+170% YoY</div>
+  </div>
+  <div class="kpi">
+    <div class="label">CoreWeave Backlog</div>
+    <div class="value">$66.8B</div>
+    <div class="delta warn">vs $29.8B debt</div>
+  </div>
+  <div class="kpi">
+    <div class="label">H100 Rate (Peak→Now)</div>
+    <div class="value">$8→$2</div>
+    <div class="delta down">-75% from peak</div>
+  </div>
+  <div class="kpi">
+    <div class="label">CRWV Default Risk</div>
+    <div class="value">40%</div>
+    <div class="delta down">5-year CDS implied</div>
+  </div>
+</div>
+
+<!-- MARKET LANDSCAPE -->
+<section>
+  <h2>Market Landscape</h2>
+  <p class="section-intro">Neoclouds passed $5B quarterly revenue in Q2 2025 and are on track for $23B+ for the full year. The sector is dominated by a handful of players, with CoreWeave far ahead.</p>
+
+  <h3 style="color:var(--heading); margin: 20px 0 12px; font-size: 1.02rem;">Estimated Neocloud Revenue Share (2025)</h3>
+  <div class="bar-chart">
+    <div class="bar-row">
+      <span class="bar-label">CoreWeave</span>
+      <div class="bar-track"><div class="bar-fill crwv" style="width:55%">~$5.1B (dominant)</div></div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">Crusoe</span>
+      <div class="bar-track"><div class="bar-fill crusoe" style="width:12%">Growing fast</div></div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">Lambda</span>
+      <div class="bar-track"><div class="bar-fill lambda" style="width:8%">$500M+ run rate</div></div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">Nebius</span>
+      <div class="bar-track"><div class="bar-fill nebius" style="width:7%">$900M-1.1B ARR</div></div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">Others</span>
+      <div class="bar-track"><div class="bar-fill other" style="width:18%">RunPod, Vast.ai, etc.</div></div>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>Company</th><th>Est. 2025 Revenue</th><th>Differentiation</th><th>Key Customers</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>CoreWeave</strong></td>
+        <td>$5.1B</td>
+        <td>Scale, NVIDIA partnership, Kubernetes-native, InfiniBand</td>
+        <td>Microsoft, OpenAI, Meta</td>
+        <td><span class="tag ipo">NASDAQ: CRWV</span></td>
+      </tr>
+      <tr>
+        <td><strong>Crusoe Energy</strong></td>
+        <td>TBD (growing fast)</td>
+        <td>100% renewable energy, flare-gas powered, sustainability</td>
+        <td>OpenAI (Stargate campus)</td>
+        <td><span class="tag info">Private</span></td>
+      </tr>
+      <tr>
+        <td><strong>Lambda Labs</strong></td>
+        <td>$500M+ (H1: $250M)</td>
+        <td>Developer UX, 1-Click Clusters, zero egress fees</td>
+        <td>AI startups, research labs</td>
+        <td><span class="tag info">Private</span></td>
+      </tr>
+      <tr>
+        <td><strong>Nebius</strong></td>
+        <td>$312M (H1: $156M)</td>
+        <td>Microsoft Azure partnership, European presence</td>
+        <td>Microsoft (5-year deal)</td>
+        <td><span class="tag ipo">Public</span></td>
+      </tr>
+      <tr>
+        <td><strong>RunPod</strong></td>
+        <td>Smaller</td>
+        <td>Serverless GPU, low-latency inference, easy API</td>
+        <td>SMB AI developers</td>
+        <td><span class="tag info">Private</span></td>
+      </tr>
+      <tr>
+        <td><strong>Vast.ai</strong></td>
+        <td>Smaller</td>
+        <td>GPU marketplace, lowest price discovery</td>
+        <td>Cost-sensitive researchers</td>
+        <td><span class="tag info">Private</span></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- COREWEAVE DEEP DIVE -->
+<section>
+  <h2>CoreWeave (CRWV) — Deep Dive</h2>
+  <p class="section-intro">The undisputed neocloud leader and one of the most polarizing investments in the AI space. Extraordinary growth against extreme leverage.</p>
+
+  <div class="profile-card">
+    <h3>CoreWeave at a Glance <span class="tag mixed">High Risk / High Reward</span></h3>
+    <div class="profile-grid">
+      <div class="profile-section">
+        <h4>Growth Metrics</h4>
+        <ul>
+          <li><strong>IPO:</strong> March 28, 2025 at $40/share on NASDAQ</li>
+          <li><strong>Revenue:</strong> $16M (2022) → $229M (2023) → $1.92B (2024) → $5.1B (2025)</li>
+          <li><strong>FY2026 Guidance:</strong> $12–13B (~140% YoY growth)</li>
+          <li><strong>Backlog:</strong> $66.8B as of Dec 31, 2025</li>
+          <li><strong>Adj. EBITDA:</strong> $3.1B (FY2025) — 60% margin</li>
+          <li><strong>Gross Margin:</strong> ~65% non-GAAP</li>
+          <li><strong>Eclipsed $5B revenue faster than any cloud platform in history</strong></li>
+        </ul>
+      </div>
+      <div class="profile-section">
+        <h4>Risk Metrics</h4>
+        <ul>
+          <li><strong>Total Debt:</strong> $29.8B (8.94x debt-to-equity)</li>
+          <li><strong>Net Loss:</strong> $1.17B (FY2025) driven by $1.2B interest expense</li>
+          <li><strong>2026 Debt Wall:</strong> $4.2B in principal due this year</li>
+          <li><strong>Off-Balance Sheet:</strong> $34B in leases</li>
+          <li><strong>Current Ratio:</strong> 0.46 (severe liquidity concern)</li>
+          <li><strong>Short Interest:</strong> 16.5% (rising 13.9%)</li>
+          <li><strong>CDS-Implied Default:</strong> 40% over 5 years</li>
+          <li><strong>Stock:</strong> $84 (down 55% from $187 ATH)</li>
+        </ul>
+      </div>
+      <div class="profile-section">
+        <h4>Key Contracts</h4>
+        <ul>
+          <li><strong>OpenAI:</strong> ~$22.4B total commitment</li>
+          <li><strong>Meta:</strong> ~$14.2B through Dec 2031</li>
+          <li><strong>Microsoft:</strong> $10B of original $17B booked; was 62% of 2024 revenue</li>
+          <li><strong>NVIDIA:</strong> $2B private placement (Jan 2026) at $87.20/share — backstop signal</li>
+          <li>Customer concentration risk: top 3 = ~70%+ of revenue</li>
+        </ul>
+      </div>
+      <div class="profile-section">
+        <h4>The Bull/Bear Divide</h4>
+        <ul>
+          <li><strong>29 analysts cover CRWV:</strong> 19 Buy, 2 Sell</li>
+          <li><strong>Avg. price target:</strong> $120.79 (+44% upside)</li>
+          <li><strong>Bulls (GS, MS):</strong> Unprecedented backlog, NVIDIA strategic partner</li>
+          <li><strong>Bears (Chanos):</strong> GPU depreciation manipulation, debt ponzi structure</li>
+          <li><strong>CapEx plan:</strong> $30-35B in 2026 — exceeds entire market cap</li>
+          <li><strong>The test:</strong> Can they refinance $4.2B at reasonable rates?</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GPU PRICING COLLAPSE -->
+<section>
+  <h2>The GPU Pricing Collapse</h2>
+  <p class="section-intro">H100 rental rates have fallen 60-75% from peak, transforming GPUs from a scarce premium asset into a commoditizing resource. This is the central threat to neocloud economics.</p>
+
+  <div class="price-timeline">
+    <h3 style="color:var(--heading); margin-bottom: 18px; font-size: 1.05rem;">H100 GPU Rental Rate Evolution</h3>
+    <div class="pt-row">
+      <span class="pt-period">H2 2023</span>
+      <div class="pt-bar"><div class="pt-bar-inner hot" style="width:100%">$8–10/GPU-hr (extreme scarcity)</div></div>
+    </div>
+    <div class="pt-row">
+      <span class="pt-period">H1 2024</span>
+      <div class="pt-bar"><div class="pt-bar-inner warm" style="width:70%">$5–7/GPU-hr (supply improving)</div></div>
+    </div>
+    <div class="pt-row">
+      <span class="pt-period">H2 2024</span>
+      <div class="pt-bar"><div class="pt-bar-inner warm" style="width:50%">$3–5/GPU-hr (competition rising)</div></div>
+    </div>
+    <div class="pt-row">
+      <span class="pt-period">H1 2025</span>
+      <div class="pt-bar"><div class="pt-bar-inner cool" style="width:35%">$2–4/GPU-hr (AWS cuts 44%)</div></div>
+    </div>
+    <div class="pt-row">
+      <span class="pt-period">Q1 2026</span>
+      <div class="pt-bar"><div class="pt-bar-inner cold" style="width:25%">$1.49–3.50/GPU-hr (commodity)</div></div>
+    </div>
+  </div>
+
+  <div class="cards" style="margin-top: 24px;">
+    <div class="card">
+      <h3>What's Driving the Collapse</h3>
+      <ul>
+        <li><strong>Supply catch-up:</strong> NVIDIA shipped aggressively; H100s are no longer scarce</li>
+        <li><strong>Hyperscaler price wars:</strong> AWS slashed H100 pricing by 44% in mid-2025</li>
+        <li><strong>Next-gen displacement:</strong> Blackwell offers 4-5x faster inference — NVIDIA CEO joked you "couldn't give Hoppers away"</li>
+        <li><strong>Custom ASIC competition:</strong> Google TPU, AWS Trainium, Microsoft Maia all offering cheaper AI compute</li>
+        <li><strong>Spot market pressure:</strong> Vast.ai/RunPod driving race-to-bottom on spot pricing</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Implications for Neoclouds</h3>
+      <ul>
+        <li><strong>Collateral erosion:</strong> GPU-collateralized loans face shrinking collateral values as rental rates and resale values drop</li>
+        <li><strong>Margin compression:</strong> Revenue per GPU falling while debt service costs are fixed</li>
+        <li><strong>Depreciation manipulation:</strong> CoreWeave extended GPU depreciation periods — inflating EBITDA but not changing economics</li>
+        <li><strong>Fleet replacement cost:</strong> First-gen infrastructure (2021-22 wave) hitting depreciation limits, forcing upgrades</li>
+        <li><strong>The era of rewarding companies simply for amassing GPUs is definitively over</strong></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- NEOCLOUD vs HYPERSCALER -->
+<section>
+  <h2>Neocloud vs. Hyperscaler: The Competitive Dynamic</h2>
+  <p class="section-intro">The cost and speed advantages that birthed the neocloud sector are narrowing as hyperscalers invest in AI-native infrastructure and custom silicon.</p>
+
+  <div class="vs-grid">
+    <div class="vs-col neo">
+      <h3>Neocloud Advantages</h3>
+      <ul>
+        <li><strong>Cost:</strong> 66% cheaper than hyperscalers — H100 at $34/hr vs $98/hr on hyperscaler (Uptime Institute, 2024)</li>
+        <li><strong>Speed:</strong> Deploy in days/weeks vs months on hyperscalers; lean teams, agile infra</li>
+        <li><strong>Specialization:</strong> Purpose-built for AI training/inference — no legacy overhead</li>
+        <li><strong>InfiniBand networking:</strong> Superior interconnect for large-scale distributed training</li>
+        <li><strong>Kubernetes-native:</strong> CoreWeave's K8s stack optimized for GPU workloads</li>
+        <li><strong>No lock-in:</strong> Less ecosystem stickiness enables customer flexibility</li>
+        <li><strong>Sustainability:</strong> Crusoe offers 100% renewable energy — increasingly matters for enterprise procurement</li>
+      </ul>
+    </div>
+    <div class="vs-col hyper">
+      <h3>Hyperscaler Counter-Attack</h3>
+      <ul>
+        <li><strong>Custom silicon:</strong> AWS Trainium, Google TPU, Microsoft Maia eliminate NVIDIA dependency</li>
+        <li><strong>Price cuts:</strong> AWS cut H100 pricing 44% — can afford to bleed on GPU margin</li>
+        <li><strong>Ecosystem depth:</strong> Developer tools, security, compliance, managed services</li>
+        <li><strong>Balance sheet:</strong> $100B+ cash reserves vs neocloud debt-fueled expansion</li>
+        <li><strong>Supply securing:</strong> Ramped Blackwell procurement, reducing the "access gap"</li>
+        <li><strong>AI platforms:</strong> Bedrock (AWS), Vertex AI (GCP), Azure AI Studio create full-stack lock-in</li>
+        <li><strong>Irony:</strong> CoreWeave's top customers (Microsoft, Meta, OpenAI) are also building their own capacity</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top: 20px; border-color: var(--amber);">
+    <h3>The Closing Window <span class="tag bear">Key Risk</span></h3>
+    <p style="margin-top: 8px;">The gap that allowed neoclouds to thrive — hyperscaler GPU scarcity and long lead times — is closing. Hyperscalers have ramped deployment timelines, secured forward Blackwell supply, and begun re-optimizing stacks for AI-native developers. The question is no longer whether neoclouds can win on access, but whether they can win on <strong>platform value</strong>. Companies that don't invest in software risk being relegated to GPU arbitrage — the lowest-margin layer of the AI stack.</p>
+  </div>
+</section>
+
+<!-- UNIT ECONOMICS & DEBT -->
+<section>
+  <h2>The Debt & Unit Economics Problem</h2>
+  <p class="section-intro">The neocloud business model is fundamentally a leveraged infrastructure play: borrow against GPUs, rent them out, pray the spread covers interest.</p>
+
+  <table>
+    <thead>
+      <tr><th>Metric</th><th>CoreWeave</th><th>Implication</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Total Debt</td><td>$29.8B</td><td style="color:var(--red)">8.94x debt-to-equity — extreme leverage</td></tr>
+      <tr><td>Off-Balance Sheet Leases</td><td>$34B</td><td style="color:var(--red)">True obligations far exceed reported debt</td></tr>
+      <tr><td>2026 Maturities</td><td>$4.2B</td><td style="color:var(--red)">Must refinance in tight credit market</td></tr>
+      <tr><td>Interest Expense (FY25)</td><td>~$1.2B</td><td style="color:var(--amber)">Primary driver of net losses</td></tr>
+      <tr><td>Weighted Avg. Rate (short-term)</td><td>>12%</td><td style="color:var(--red)">Expensive capital — requires high utilization</td></tr>
+      <tr><td>Net Loss (FY25)</td><td>$1.17B</td><td style="color:var(--amber)">Loss widened despite revenue tripling</td></tr>
+      <tr><td>Adj. EBITDA (FY25)</td><td>$3.1B</td><td style="color:var(--green)">Strong underlying margins (~60%)</td></tr>
+      <tr><td>CapEx Plan (2026)</td><td>$30-35B</td><td style="color:var(--red)">Exceeds entire market cap — requires continuous financing</td></tr>
+      <tr><td>Operating Cash Flow (H1 25)</td><td>Negative</td><td style="color:var(--red)">Debt service funded by new borrowings, not operations</td></tr>
+      <tr><td>NVIDIA Backstop</td><td>$2B (Jan 2026)</td><td style="color:var(--green)">Strategic signal — won't let CoreWeave fail</td></tr>
+    </tbody>
+  </table>
+
+  <div class="card" style="margin-top: 20px; border-color: var(--red);">
+    <h3>The GPU Debt Spiral <span class="tag bear">Structural Risk</span></h3>
+    <p style="margin-top: 8px;">CoreWeave pioneered GPU-collateralized debt — borrowing against GPUs to buy more GPUs. The DDTL loans are secured by hardware whose rental rates have already fallen 50-70%, shrinking collateral value just as repayment schedules begin. The business model requires <strong>perfect execution</strong>: borrow billions, buy GPUs, build data centers fast, generate revenue immediately to service debt. <strong>Any delay in that chain breaks the machine.</strong> Short-seller Jim Chanos has highlighted extended depreciation periods as accounting manipulation. Wall Street now prices a 40% chance of default within 5 years.</p>
+  </div>
+</section>
+
+<!-- RISK MATRIX -->
+<section>
+  <h2>Sector Risk Assessment</h2>
+
+  <div class="gauge-row">
+    <div class="gauge-item">
+      <h4>GPU Commoditization</h4>
+      <div class="gauge-bar"><div class="gauge-fill crit" style="width:90%"></div></div>
+      <div class="gauge-meta"><span>Critical</span><span>90/100</span></div>
+      <p style="font-size:0.8rem; color:var(--muted); margin-top:8px;">H100 rates down 75% from peak. Blackwell makes current fleets obsolete within 12-18 months. NVIDIA's CEO: "you couldn't give Hoppers away."</p>
+    </div>
+    <div class="gauge-item">
+      <h4>Refinancing / Debt Wall</h4>
+      <div class="gauge-bar"><div class="gauge-fill crit" style="width:88%"></div></div>
+      <div class="gauge-meta"><span>Critical</span><span>88/100</span></div>
+      <p style="font-size:0.8rem; color:var(--muted); margin-top:8px;">$4.2B due in 2026 for CoreWeave alone. Operating cash flow negative. Must refinance at >12% rates against depreciating collateral.</p>
+    </div>
+    <div class="gauge-item">
+      <h4>Customer Concentration</h4>
+      <div class="gauge-bar"><div class="gauge-fill high" style="width:82%"></div></div>
+      <div class="gauge-meta"><span>High</span><span>82/100</span></div>
+      <p style="font-size:0.8rem; color:var(--muted); margin-top:8px;">CoreWeave: Microsoft 62% of 2024 rev. Top 3 = 70%+. These same customers are building internal AI capacity and custom chips.</p>
+    </div>
+    <div class="gauge-item">
+      <h4>Hyperscaler Retaliation</h4>
+      <div class="gauge-bar"><div class="gauge-fill high" style="width:78%"></div></div>
+      <div class="gauge-meta"><span>High</span><span>78/100</span></div>
+      <p style="font-size:0.8rem; color:var(--muted); margin-top:8px;">AWS cut H100 prices 44%. Custom silicon (TPU, Trainium, Maia) bypasses GPU entirely. $100B+ cash war chests vs. neocloud debt.</p>
+    </div>
+    <div class="gauge-item">
+      <h4>Hardware Obsolescence</h4>
+      <div class="gauge-bar"><div class="gauge-fill high" style="width:75%"></div></div>
+      <div class="gauge-meta"><span>High</span><span>75/100</span></div>
+      <p style="font-size:0.8rem; color:var(--muted); margin-top:8px;">NVIDIA releases new architectures every 1-2 years. Neoclouds financing GPUs with 3-5yr debt against 12-18 month hardware cycles.</p>
+    </div>
+    <div class="gauge-item">
+      <h4>Sector Consolidation</h4>
+      <div class="gauge-bar"><div class="gauge-fill mid" style="width:65%"></div></div>
+      <div class="gauge-meta"><span>Moderate</span><span>65/100</span></div>
+      <p style="font-size:0.8rem; color:var(--muted); margin-top:8px;">Paperspace and Jarvis Labs already frozen/shut. Expect more exits. Only 3-5 players likely survive to 2028.</p>
+    </div>
+  </div>
+</section>
+
+<!-- INVESTMENT FRAMEWORK -->
+<section>
+  <h2>Investment Framework</h2>
+  <p class="section-intro">How to think about investing in the neocloud sector across public and private opportunities.</p>
+
+  <div class="cards">
+    <div class="card">
+      <h3>CoreWeave (CRWV) <span class="tag mixed">Speculative</span></h3>
+      <ul>
+        <li><strong>Bull thesis:</strong> $66.8B backlog at 60% EBITDA margins with NVIDIA backstop = the next AWS</li>
+        <li><strong>Bear thesis:</strong> $29.8B debt against depreciating GPUs with 40% default probability</li>
+        <li><strong>Key catalyst:</strong> Successful $4.2B refinancing in 2026; Microsoft contract renewal</li>
+        <li><strong>Analyst consensus:</strong> Buy, $120.79 PT (+44%), but 16.5% short interest</li>
+        <li><strong>Our take:</strong> High-conviction directional bet on AI infra. Not for risk-averse portfolios.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>NVIDIA (NVDA) — Neocloud Proxy <span class="tag bull">Lower Risk</span></h3>
+      <ul>
+        <li>Neoclouds are NVIDIA's largest non-hyperscaler customer base</li>
+        <li>NVIDIA's $2B CoreWeave investment = aligned incentives</li>
+        <li>Captures GPU demand regardless of which neocloud wins</li>
+        <li>Pick-and-shovel play — benefits from sector growth without debt risk</li>
+        <li>Risk: neocloud defaults could create GPU write-offs and demand shock</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Private Neoclouds <span class="tag info">Watch List</span></h3>
+      <ul>
+        <li><strong>Lambda Labs:</strong> Best developer UX, $500M+ run rate, NVIDIA investor. Potential IPO candidate.</li>
+        <li><strong>Crusoe Energy:</strong> Sustainability moat, OpenAI's Stargate partner. Differentiated model.</li>
+        <li><strong>Nebius:</strong> Microsoft Azure partnership, European footprint. Public but small.</li>
+        <li>Most attractive for venture/growth investors at pre-consolidation valuations</li>
+        <li>Acqui-hire risk: hyperscalers may buy for talent/tech rather than let them scale</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Short / Hedge Ideas <span class="tag bear">Defensive</span></h3>
+      <ul>
+        <li><strong>CRWV puts:</strong> High short interest + debt wall = asymmetric downside risk if refinancing fails</li>
+        <li><strong>Long hyperscaler / short neocloud pairs:</strong> AWS/Azure benefit from same AI demand with better balance sheets</li>
+        <li><strong>Storage suppliers (long):</strong> NAND prices up 60% QoQ — storage is 30% of neocloud infra budget (up from 10%)</li>
+        <li>Timing risk: sector could run further before correction — don't short momentum blindly</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- OUTLOOK -->
+<section>
+  <h2>Sector Outlook & Conclusion</h2>
+  <div class="card" style="border-color: var(--accent);">
+    <h3 style="margin-bottom: 16px;">Three Scenarios for the Neocloud Sector</h3>
+
+    <div style="margin-bottom: 20px;">
+      <h4 style="color: var(--green); font-size: 0.95rem; margin-bottom: 6px;">Bull Case (30% probability): The New Cloud Tier</h4>
+      <p style="font-size: 0.9rem;">AI demand continues accelerating. CoreWeave refinances successfully, reaches profitability by 2027. 3-5 neoclouds establish themselves as a permanent tier between hyperscalers and bare-metal. Sector reaches $180B+ by 2030. CRWV trades above $150.</p>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+      <h4 style="color: var(--amber); font-size: 0.95rem; margin-bottom: 6px;">Base Case (45% probability): Consolidation & Survival</h4>
+      <p style="font-size: 0.9rem;">AI demand moderates from peak growth rates. CoreWeave refinances but at punitive rates, compressing margins. Weaker neoclouds (Paperspace already gone) are acquired or shut down. 2-3 survivors (CoreWeave, Lambda, Crusoe) carve out a niche but hyperscalers recapture share through custom silicon and price cuts. Sector reaches $80-120B by 2030. CRWV trades $60-100.</p>
+    </div>
+
+    <div>
+      <h4 style="color: var(--red); font-size: 0.95rem; margin-bottom: 6px;">Bear Case (25% probability): The GPU Debt Crisis</h4>
+      <p style="font-size: 0.9rem;">AI demand disappoints or enterprise ROI remains unproven. CoreWeave fails to refinance $4.2B at viable rates, triggers restructuring. GPU collateral values crater as Blackwell floods market. Cascading defaults across neocloud debt instruments. NVIDIA absorbs losses on CoreWeave backstop. Surviving workloads migrate to hyperscalers. The neocloud category is remembered as the "CDO of AI" — debt instruments backed by rapidly depreciating silicon.</p>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top: 18px; border-color: var(--orange);">
+    <h3>The Bottom Line</h3>
+    <p style="font-size: 0.98rem; line-height: 1.8; margin-top: 8px;">
+      The neocloud sector is the purest leveraged bet on AI infrastructure demand. The growth is real — 200%+ per year — but the business model is structurally fragile: debt-funded, hardware-centric, dependent on a single supplier (NVIDIA), serving a small number of customers who are actively building alternatives. <strong>CoreWeave is the sector's bellwether and its greatest risk.</strong> If it refinances successfully and maintains customer commitments, the sector has a path to permanence. If it doesn't, the contagion could redefine how the market prices AI infrastructure risk. For investors: this is the AI trade's most asymmetric subsector — massive upside if the cycle continues, massive downside if it doesn't. Size positions accordingly.
+    </p>
+  </div>
+</section>
+
+<!-- SOURCES -->
+<div class="sources">
+  <h3>Sources</h3>
+  <a href="https://www.srgresearch.com/articles/neoclouds-currently-growing-by-over-200-per-year-will-reach-180-billion-in-revenues-by-2030" target="_blank">Synergy Research — Neoclouds Growing 200%+ Per Year, $180B by 2030</a>
+  <a href="https://www.mordorintelligence.com/industry-reports/neocloud-market" target="_blank">Mordor Intelligence — Neocloud Market Size & Growth Trends 2031</a>
+  <a href="https://sacra.com/c/coreweave/" target="_blank">Sacra — CoreWeave Revenue, Valuation & Funding</a>
+  <a href="https://markets.financialcontent.com/stocks/article/finterra-2026-2-23-the-gpu-debt-wall-a-deep-dive-into-coreweave-crwv-and-the-2026-ai-financing-crisis" target="_blank">FinancialContent — The GPU Debt Wall: CoreWeave & 2026 AI Financing Crisis</a>
+  <a href="https://www.levelheadedinvesting.com/p/when-growth-runs-on-debt-the-coreweave-case-study" target="_blank">Level Headed Investing — When Growth Runs on Debt: CoreWeave Case Study</a>
+  <a href="https://theinvestorchannel.substack.com/p/coreweaves-22b-gamble-why-the-market" target="_blank">The Investor Channel — CoreWeave's $22B Gamble: 40% Default Risk</a>
+  <a href="https://techcrunch.com/2026/01/26/nvidia-invests-2b-to-help-debt-ridden-coreweave-add-5gw-of-ai-compute/" target="_blank">TechCrunch — NVIDIA Invests $2B in CoreWeave</a>
+  <a href="https://stansberryresearch.com/stock-market-trends/coreweaves-55-billion-backlog-marks-the-next-phase-of-the-neocloud-boom" target="_blank">Stansberry Research — CoreWeave's $55B Backlog & Neocloud Boom</a>
+  <a href="https://www.datacenterknowledge.com/ai-data-centers/neoclouds-vs-hyperscalers-will-ai-s-specialized-clouds-prevail-" target="_blank">Data Center Knowledge — Neoclouds vs Hyperscalers</a>
+  <a href="https://www.networkworld.com/article/4011187/neoclouds-roll-in-challenge-hyperscalers-for-ai-workloads.html" target="_blank">Network World — Neoclouds Challenge Hyperscalers for AI Workloads</a>
+  <a href="https://intuitionlabs.ai/articles/h100-rental-prices-cloud-comparison" target="_blank">IntuitionLabs — H100 Rental Prices Compared Across 15+ Providers</a>
+  <a href="https://www.silicondata.com/blog/h100-rental-price-over-time" target="_blank">Silicon Data — H100 Rental Price Over Time 2023-2025</a>
+  <a href="https://www.abiresearch.com/blog/leading-neocloud-companies" target="_blank">ABI Research — Profiling Seven Leading Neocloud Companies</a>
+  <a href="https://www.datacenterfrontier.com/hyperscale/article/55327546/the-evolution-of-the-neocloud-from-niche-to-mainstream-hyperscale-challenger" target="_blank">Data Center Frontier — The Evolution of the Neocloud</a>
+  <a href="https://mlq.ai/research/neocloud-infrastructure/" target="_blank">MLQ.ai — Neocloud Infrastructure Research</a>
+  <a href="https://www.techi.com/coreweave-stock/" target="_blank">Techi — CoreWeave Stock Analysis & Forecast 2026</a>
+  <a href="https://medium.com/@Elongated_musk/ai-infrastructure-is-the-market-mispricing-neocloud-default-risk-ce83eda92d59" target="_blank">Medium — Is the Market Mispricing Neocloud Default Risk?</a>
+  <a href="https://www.vdura.com/2026/03/03/neocloud-storage-costs-gpu-infrastructure-blind-spot/" target="_blank">VDURA — The $35B Blind Spot: Storage as the Silent Tax on Every GPU</a>
+</div>
+
+</div>
+
+<div class="footer">
+  <p>Neocloud Sector Overview — Q1 2026 | Generated March 30, 2026</p>
+  <p style="margin-top:6px;">Data sourced from Synergy Research, Mordor Intelligence, Sacra, TechCrunch, public filings, and analyst reports.</p>
+  <p style="margin-top:6px;">This report is for informational purposes only and does not constitute investment advice.</p>
+</div>
+
+</body>
+</html>
