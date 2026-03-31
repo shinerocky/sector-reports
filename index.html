@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Research Hub — shinerocky</title>
+  <style>
+    :root {
+      --bg: #0a0e1a;
+      --surface: #111827;
+      --surface2: #1a2235;
+      --border: #1e2d47;
+      --accent: #3b82f6;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f2027 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 56px 40px 48px;
+      text-align: center;
+    }
+    .header-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .logo-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: #3b82f6;
+      box-shadow: 0 0 12px #3b82f6;
+    }
+    .logo-text {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .header h1 {
+      font-size: 40px;
+      font-weight: 800;
+      background: linear-gradient(90deg, #e2e8f0, #93c5fd, #6ee7b7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 12px;
+      line-height: 1.2;
+    }
+    .header p {
+      color: var(--muted);
+      font-size: 15px;
+      max-width: 480px;
+      margin: 0 auto 28px;
+      line-height: 1.7;
+    }
+    .header-stats {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+    .stat-item .stat-value { font-size: 22px; font-weight: 700; color: #60a5fa; }
+    .stat-item .stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+
+    /* ── CONTAINER ── */
+    .container { max-width: 1100px; margin: 0 auto; padding: 56px 40px 80px; }
+
+    /* ── SECTION ── */
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+    h2 { font-size: 20px; font-weight: 700; color: #f1f5f9; margin-bottom: 24px; }
+
+    /* ── PROJECT GRID ── */
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+      margin-bottom: 56px;
+    }
+
+    /* ── PROJECT CARD ── */
+    .project-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      transition: border-color .2s, transform .2s, box-shadow .2s;
+      position: relative;
+    }
+    .project-card:hover {
+      border-color: #3b82f6;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 32px rgba(59,130,246,.15);
+    }
+    .card-accent-bar { height: 3px; width: 100%; }
+    .bar-blue   { background: linear-gradient(90deg, #1d4ed8, #3b82f6, #06b6d4); }
+    .bar-green  { background: linear-gradient(90deg, #065f46, #10b981, #34d399); }
+    .bar-purple { background: linear-gradient(90deg, #4c1d95, #8b5cf6, #a78bfa); }
+    .bar-yellow { background: linear-gradient(90deg, #92400e, #f59e0b, #fbbf24); }
+    .bar-red    { background: linear-gradient(90deg, #7f1d1d, #ef4444, #f87171); }
+    .bar-cyan   { background: linear-gradient(90deg, #164e63, #06b6d4, #67e8f9); }
+
+    .card-body { padding: 20px 22px 22px; flex: 1; display: flex; flex-direction: column; }
+    .card-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .card-tag {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+    .tag-blue   { background: rgba(59,130,246,.15);  color: #60a5fa;  border: 1px solid #1d4ed8; }
+    .tag-green  { background: rgba(16,185,129,.15);  color: #34d399;  border: 1px solid #059669; }
+    .tag-purple { background: rgba(139,92,246,.15);  color: #a78bfa;  border: 1px solid #7c3aed; }
+    .tag-yellow { background: rgba(245,158,11,.15);  color: #fbbf24;  border: 1px solid #d97706; }
+    .tag-red    { background: rgba(239,68,68,.15);   color: #f87171;  border: 1px solid #b91c1c; }
+    .tag-cyan   { background: rgba(6,182,212,.15);   color: #67e8f9;  border: 1px solid #0e7490; }
+    .card-date  { font-size: 11px; color: var(--muted); }
+
+    .card-title { font-size: 16px; font-weight: 700; color: #f1f5f9; margin-bottom: 8px; line-height: 1.4; }
+    .card-desc  { font-size: 13px; color: var(--muted); line-height: 1.7; flex: 1; margin-bottom: 16px; }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+    .card-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+    .pill {
+      font-size: 10px;
+      font-weight: 500;
+      padding: 2px 7px;
+      border-radius: 20px;
+      background: var(--surface2);
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+    .card-arrow {
+      font-size: 16px;
+      color: var(--accent);
+      transition: transform .2s;
+    }
+    .project-card:hover .card-arrow { transform: translateX(4px); }
+
+    /* ── COMING SOON CARD ── */
+    .card-coming-soon {
+      opacity: .5;
+      pointer-events: none;
+    }
+    .coming-badge {
+      position: absolute;
+      top: 14px; right: 14px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: rgba(148,163,184,.1);
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    /* ── ABOUT SECTION ── */
+    .about-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px 32px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+    .about-card h3 { font-size: 15px; font-weight: 600; color: #f1f5f9; margin-bottom: 10px; }
+    .about-card p  { font-size: 13px; color: var(--muted); line-height: 1.8; }
+    .tech-list { list-style: none; padding: 0; }
+    .tech-list li {
+      font-size: 12px;
+      color: var(--muted);
+      padding: 4px 0;
+      padding-left: 14px;
+      position: relative;
+    }
+    .tech-list li::before { content: '→'; position: absolute; left: 0; color: var(--accent); }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 24px 40px;
+      border-top: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--muted);
+    }
+    footer a { color: #60a5fa; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* RESPONSIVE */
+    @media (max-width: 700px) {
+      .header { padding: 40px 20px 36px; }
+      .header h1 { font-size: 28px; }
+      .container { padding: 40px 20px 60px; }
+      .about-card { grid-template-columns: 1fr; gap: 20px; }
+      .header-stats { gap: 24px; }
+    }
+
+    html { scroll-behavior: smooth; }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════ HEADER ══════════════════════ -->
+<div class="header">
+  <div class="header-logo">
+    <div class="logo-dot"></div>
+    <div class="logo-text">shinerocky · research hub</div>
+  </div>
+  <h1>Research &amp; Analysis</h1>
+  <p>Institutional-grade sector reports, company deep dives, and market analysis — built with AI-assisted research.</p>
+  <div class="header-stats">
+    <div class="stat-item">
+      <div class="stat-value" id="report-count">4</div>
+      <div class="stat-label">Reports Published</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">Mar 2026</div>
+      <div class="stat-label">Last Updated</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">Free</div>
+      <div class="stat-label">Access</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ MAIN ══════════════════════ -->
+<div class="container">
+
+  <!-- PUBLISHED -->
+  <div class="section-label">Published Reports</div>
+  <h2>Research Library</h2>
+
+  <div class="project-grid">
+
+    <!-- REPORT 1: Neocloud Sector -->
+    <a class="project-card" href="./sector-report/">
+      <div class="card-accent-bar bar-blue"></div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="card-tag tag-blue">Sector Overview</span>
+          <span class="card-date">Mar 2026</span>
+        </div>
+        <div class="card-title">Neocloud &amp; Bitcoin Miner Conversion Sector Review</div>
+        <div class="card-desc">Comprehensive landscape of AI GPU cloud providers and Bitcoin miners pivoting to HPC/AI infrastructure. Covers CoreWeave, IREN, BitDeer, Lambda Labs, Nebius, Applied Digital — with market sizing, comps, valuation, risks, and 2026–28 predictions.</div>
+        <div class="card-footer">
+          <div class="card-pills">
+            <span class="pill">CoreWeave</span>
+            <span class="pill">IREN</span>
+            <span class="pill">BitDeer</span>
+            <span class="pill">AI Cloud</span>
+          </div>
+          <div class="card-arrow">→</div>
+        </div>
+      </div>
+    </a>
+
+    <!-- REPORT 2: AVGO Earnings Analysis -->
+    <a class="project-card" href="./avgo-analysis/">
+      <div class="card-accent-bar bar-green"></div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="card-tag tag-green">Earnings Analysis</span>
+          <span class="card-date">Mar 2026</span>
+        </div>
+        <div class="card-title">Broadcom (AVGO) — Q1 FY2026 Earnings & AI Outlook</div>
+        <div class="card-desc">Deep-dive on AVGO's Q1 FY2026 beat, Hock Tan's $100B AI chip revenue target for 2027, 5-year financial projections, and 3-year stock scenarios (bull/base/bear). Covers OpenAI Titan XPU, Meta MTIA, Anthropic, and 6 custom silicon partnerships.</div>
+        <div class="card-footer">
+          <div class="card-pills">
+            <span class="pill">AVGO</span>
+            <span class="pill">XPU</span>
+            <span class="pill">$100B Target</span>
+            <span class="pill">Stock Scenarios</span>
+          </div>
+          <div class="card-arrow">→</div>
+        </div>
+      </div>
+    </a>
+
+    <!-- REPORT 3: Semiconductor Sector -->
+    <a class="project-card" href="./semiconductor-sector-report.html">
+      <div class="card-accent-bar bar-red"></div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="card-tag tag-red">Sector Overview</span>
+          <span class="card-date">Mar 2026</span>
+        </div>
+        <div class="card-title">Semiconductor Sector — AI Bubble or Supercycle?</div>
+        <div class="card-desc">$975B market analysis across GPU, CPU, Memory &amp; Storage. Covers NVIDIA dominance, memory supercycle, TSMC/Samsung capex arms race, geopolitics, and subsector investment scorecards.</div>
+        <div class="card-footer">
+          <div class="card-pills">
+            <span class="pill">NVDA</span>
+            <span class="pill">Memory</span>
+            <span class="pill">TSMC</span>
+            <span class="pill">$975B</span>
+          </div>
+          <div class="card-arrow">→</div>
+        </div>
+      </div>
+    </a>
+
+    <!-- REPORT 4: Neocloud Sector -->
+    <a class="project-card" href="./neocloud-sector-report.html">
+      <div class="card-accent-bar bar-cyan"></div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="card-tag tag-cyan">Sector Overview</span>
+          <span class="card-date">Mar 2026</span>
+        </div>
+        <div class="card-title">Neocloud Sector — GPU Cloud &amp; CoreWeave Deep Dive</div>
+        <div class="card-desc">GPU-as-a-Service market sizing ($35B → $180B by 2030). CoreWeave financials, $29.8B debt wall, H100 pricing collapse, hyperscaler vs. neocloud competitive dynamics, and scenario analysis.</div>
+        <div class="card-footer">
+          <div class="card-pills">
+            <span class="pill">CRWV</span>
+            <span class="pill">Lambda</span>
+            <span class="pill">Crusoe</span>
+            <span class="pill">GPUaaS</span>
+          </div>
+          <div class="card-arrow">→</div>
+        </div>
+      </div>
+    </a>
+
+    <!-- PLACEHOLDER -->
+    <div class="project-card card-coming-soon">
+      <div class="card-accent-bar bar-purple"></div>
+      <span class="coming-badge">Coming Soon</span>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="card-tag tag-purple">Analysis</span>
+          <span class="card-date">—</span>
+        </div>
+        <div class="card-title">Your Next Report</div>
+        <div class="card-desc">Macro analysis, sector comparisons, valuation models, or market predictions. New reports are added continuously.</div>
+        <div class="card-footer">
+          <div class="card-pills">
+            <span class="pill">TBD</span>
+          </div>
+          <div class="card-arrow">→</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ABOUT -->
+  <div class="section-label">About This Site</div>
+  <h2>How Reports Are Built</h2>
+
+  <div class="about-card">
+    <div>
+      <h3>Research Process</h3>
+      <p>Each report is produced using AI-assisted research — pulling from public filings, analyst reports, market data providers, and industry research firms. All data is sourced and timestamped. Reports are designed for institutional-grade clarity with a focus on actionable insights.</p>
+    </div>
+    <div>
+      <h3>Coverage Areas</h3>
+      <ul class="tech-list">
+        <li>AI Infrastructure &amp; Data Centers</li>
+        <li>Semiconductor &amp; GPU Supply Chain</li>
+        <li>Digital Assets &amp; Bitcoin Mining</li>
+        <li>Cloud &amp; SaaS Sector Analysis</li>
+        <li>Equity Deep Dives &amp; Comps</li>
+        <li>Macro &amp; Thematic Research</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════ FOOTER ══════════════════════ -->
+<footer>
+  <p>© 2026 shinerocky · <a href="https://github.com/shinerocky/claude" target="_blank">GitHub</a> · Research for informational purposes only · Not financial advice</p>
+</footer>
+
+<script>
+  // Fade-in animation
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.project-card, .about-card').forEach((el, i) => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = `opacity 0.4s ease ${i * 0.08}s, transform 0.4s ease ${i * 0.08}s`;
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
