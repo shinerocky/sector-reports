@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TSM — Equity Research | Taiwan Semiconductor Manufacturing</title>
+<style>
+  :root {
+    --bg: #0a0c10;
+    --card: #12151e;
+    --border: #1e2231;
+    --accent: #c4001a;
+    --accent2: #ef4444;
+    --blue: #3b82f6;
+    --cyan: #06b6d4;
+    --green: #10b981;
+    --red: #ef4444;
+    --amber: #f59e0b;
+    --text: #d1d5db;
+    --muted: #6b7280;
+    --heading: #f3f4f6;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, #1a0a0a 0%, #0d1117 40%, #0a1018 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 60px 40px 48px;
+    text-align: center;
+  }
+  .hero h1 { font-size: 2.8rem; font-weight: 800; color: var(--heading); letter-spacing: -1.5px; margin-bottom: 6px; }
+  .hero .ticker { font-size: 1.3rem; font-weight: 700; color: var(--accent2); margin-bottom: 12px; }
+  .hero .subtitle { font-size: 1.05rem; color: var(--muted); max-width: 700px; margin: 0 auto 24px; }
+  .badge-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+  .badge { display: inline-block; padding: 5px 14px; border-radius: 20px; font-size: 0.78rem; font-weight: 600; }
+  .badge.buy { background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.3); color: var(--green); }
+  .badge.date { background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.2); color: #a5b4fc; }
+  .badge.price { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text); }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 44px 24px; }
+
+  /* Thesis Banner */
+  .thesis-banner {
+    background: linear-gradient(135deg, rgba(16,185,129,0.08), rgba(16,185,129,0.02));
+    border: 1px solid rgba(16,185,129,0.2);
+    border-radius: 16px;
+    padding: 32px 36px;
+    margin-bottom: 48px;
+  }
+  .thesis-banner h2 { font-size: 1.1rem; color: var(--green); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+  .thesis-banner .driver { font-size: 1.35rem; font-weight: 700; color: var(--heading); margin-bottom: 12px; }
+  .thesis-banner p { font-size: 0.95rem; color: var(--text); max-width: 850px; }
+  .thesis-meta { display: flex; gap: 32px; margin-top: 18px; flex-wrap: wrap; }
+  .thesis-meta-item .label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); }
+  .thesis-meta-item .val { font-size: 1.1rem; font-weight: 700; color: var(--heading); }
+  .thesis-meta-item .val.green { color: var(--green); }
+
+  /* KPIs */
+  .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 48px; }
+  .kpi { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 18px; text-align: center; }
+  .kpi .label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 4px; }
+  .kpi .value { font-size: 1.6rem; font-weight: 700; color: var(--heading); }
+  .kpi .delta { font-size: 0.78rem; margin-top: 2px; }
+  .kpi .delta.up { color: var(--green); }
+  .kpi .delta.down { color: var(--red); }
+  .kpi .delta.neutral { color: var(--amber); }
+
+  /* Sections */
+  section { margin-bottom: 52px; }
+  section > h2 { font-size: 1.5rem; font-weight: 700; color: var(--heading); padding-bottom: 10px; border-bottom: 2px solid var(--accent); display: inline-block; margin-bottom: 6px; }
+  .section-intro { color: var(--muted); margin: 8px 0 20px; font-size: 0.9rem; }
+
+  /* Cards */
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 16px; margin-top: 16px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; transition: border-color 0.2s; }
+  .card:hover { border-color: var(--blue); }
+  .card h3 { font-size: 1.05rem; color: var(--heading); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .card ul { padding-left: 16px; margin-top: 6px; }
+  .card li { font-size: 0.88rem; margin-bottom: 5px; }
+  .tag { display: inline-block; font-size: 0.65rem; padding: 2px 8px; border-radius: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; }
+  .tag.deep { background: rgba(16,185,129,0.15); color: var(--green); }
+  .tag.high { background: rgba(59,130,246,0.15); color: var(--blue); }
+  .tag.driver { background: rgba(239,68,68,0.15); color: var(--red); }
+  .tag.cow { background: rgba(245,158,11,0.15); color: var(--amber); }
+  .tag.growth { background: rgba(6,182,212,0.15); color: var(--cyan); }
+  .tag.risk { background: rgba(239,68,68,0.15); color: var(--red); }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 0.84rem; }
+  th { text-align: left; padding: 10px 12px; background: rgba(255,255,255,0.02); color: var(--muted); font-weight: 600; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); }
+  td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.03); }
+  tr:hover td { background: rgba(59,130,246,0.02); }
+
+  /* Bar charts */
+  .bar-chart { margin: 16px 0; }
+  .bar-row { display: flex; align-items: center; margin-bottom: 8px; }
+  .bar-label { width: 130px; font-size: 0.8rem; color: var(--muted); flex-shrink: 0; }
+  .bar-track { flex: 1; height: 26px; background: rgba(255,255,255,0.03); border-radius: 5px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 5px; display: flex; align-items: center; padding-left: 8px; font-size: 0.72rem; font-weight: 600; color: #fff; min-width: 36px; }
+  .bar-fill.hpc { background: linear-gradient(90deg, #ef4444, #b91c1c); }
+  .bar-fill.mobile { background: linear-gradient(90deg, #3b82f6, #1d4ed8); }
+  .bar-fill.iot { background: linear-gradient(90deg, #10b981, #059669); }
+  .bar-fill.auto { background: linear-gradient(90deg, #f59e0b, #d97706); }
+  .bar-fill.dce { background: linear-gradient(90deg, #6b7280, #4b5563); }
+  .bar-fill.apple { background: linear-gradient(90deg, #a1a1aa, #71717a); }
+  .bar-fill.nvidia { background: linear-gradient(90deg, #76b900, #4a7a00); }
+  .bar-fill.broadcom { background: linear-gradient(90deg, #c4001a, #8a0012); }
+  .bar-fill.mediatek { background: linear-gradient(90deg, #eab308, #a16207); }
+  .bar-fill.qualcomm { background: linear-gradient(90deg, #3b82f6, #1e40af); }
+  .bar-fill.amd { background: linear-gradient(90deg, #ed1c24, #a01118); }
+  .bar-fill.others { background: linear-gradient(90deg, #6b7280, #4b5563); }
+  .bar-fill.n3 { background: linear-gradient(90deg, #ef4444, #b91c1c); }
+  .bar-fill.n5 { background: linear-gradient(90deg, #f59e0b, #d97706); }
+  .bar-fill.n7 { background: linear-gradient(90deg, #3b82f6, #1d4ed8); }
+  .bar-fill.mature { background: linear-gradient(90deg, #6b7280, #4b5563); }
+
+  /* Valuation matrix */
+  .val-matrix { overflow-x: auto; }
+  .val-matrix table th, .val-matrix table td { text-align: center; min-width: 80px; }
+  .val-matrix .highlight { background: rgba(16,185,129,0.08); font-weight: 700; color: var(--green); }
+
+  /* Scenario cards */
+  .scenario-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 16px; }
+  @media (max-width: 768px) { .scenario-grid { grid-template-columns: 1fr; } }
+  .scenario { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; text-align: center; }
+  .scenario h4 { margin-bottom: 8px; font-size: 1rem; }
+  .scenario .price { font-size: 2rem; font-weight: 800; margin: 8px 0; }
+  .scenario .price.bull { color: var(--green); }
+  .scenario .price.base { color: var(--blue); }
+  .scenario .price.bear { color: var(--red); }
+  .scenario .detail { font-size: 0.82rem; color: var(--muted); text-align: left; margin-top: 12px; }
+  .scenario .detail li { margin-bottom: 4px; }
+
+  /* Risk gauge */
+  .gauge-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; margin-top: 16px; }
+  .gauge-item { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+  .gauge-item h4 { color: var(--heading); margin-bottom: 6px; font-size: 0.9rem; }
+  .gauge-bar { height: 7px; background: rgba(255,255,255,0.04); border-radius: 4px; margin: 8px 0 5px; overflow: hidden; }
+  .gauge-fill { height: 100%; border-radius: 4px; }
+  .gauge-fill.crit { background: var(--red); }
+  .gauge-fill.hi { background: var(--amber); }
+  .gauge-fill.med { background: var(--blue); }
+  .gauge-fill.lo { background: var(--green); }
+  .gauge-meta { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--muted); }
+
+  /* Sources */
+  .sources { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-top: 32px; }
+  .sources h3 { color: var(--heading); margin-bottom: 10px; font-size: 0.9rem; }
+  .sources a { color: var(--cyan); text-decoration: none; font-size: 0.78rem; display: block; margin-bottom: 4px; }
+  .sources a:hover { text-decoration: underline; }
+  .footer { text-align: center; padding: 36px 20px; border-top: 1px solid var(--border); margin-top: 36px; }
+  .footer p { font-size: 0.75rem; color: var(--muted); }
+
+  @media (max-width: 640px) {
+    .hero h1 { font-size: 1.8rem; }
+    .hero { padding: 36px 18px 28px; }
+    .cards { grid-template-columns: 1fr; }
+    .kpi-row { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="ticker">NYSE: TSM</div>
+  <h1>Taiwan Semiconductor Manufacturing</h1>
+  <p class="subtitle">The world's foundry monopolist — 70% market share, 90%+ at advanced nodes, and the irreplaceable backbone of the AI revolution.</p>
+  <div class="badge-row">
+    <span class="badge buy">BUY — High Conviction</span>
+    <span class="badge price">$316.50 (Mar 31, 2026)</span>
+    <span class="badge date">Fair Value: $385–$430</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- THESIS DRIVER -->
+<div class="thesis-banner">
+  <h2>Thesis Driver</h2>
+  <div class="driver">TSMC is the only company on Earth that can manufacture the chips powering the AI revolution at scale — and it's getting more irreplaceable, not less.</div>
+  <p>TSMC holds a 70% foundry market share overall and 90%+ at advanced nodes (sub-7nm). Its 2nm node is already in volume production with 70%+ yields while Samsung sits at 55-60% and Intel at 50-55%. Every major AI chip — NVIDIA's Blackwell, AMD's MI-series, Broadcom's custom XPUs, Apple's M-series, Qualcomm's Snapdragon — is manufactured by TSMC. There is no substitute at scale.</p>
+  <div class="thesis-meta">
+    <div class="thesis-meta-item">
+      <div class="label">Conviction</div>
+      <div class="val green">High</div>
+    </div>
+    <div class="thesis-meta-item">
+      <div class="label">Target Year</div>
+      <div class="val">FY 2028</div>
+    </div>
+    <div class="thesis-meta-item">
+      <div class="label">Moat Rating</div>
+      <div class="val green">Deep</div>
+    </div>
+    <div class="thesis-meta-item">
+      <div class="label">Mgmt Credibility</div>
+      <div class="val green">High</div>
+    </div>
+    <div class="thesis-meta-item">
+      <div class="label">Next Catalyst</div>
+      <div class="val">Q1 2026 ER (Apr 16)</div>
+    </div>
+  </div>
+</div>
+
+<!-- KPI ROW -->
+<div class="kpi-row">
+  <div class="kpi">
+    <div class="label">FY2025 Revenue</div>
+    <div class="value">$122B</div>
+    <div class="delta up">+35.9% YoY</div>
+  </div>
+  <div class="kpi">
+    <div class="label">FY2026E Revenue</div>
+    <div class="value">~$159B</div>
+    <div class="delta up">~30% YoY guided</div>
+  </div>
+  <div class="kpi">
+    <div class="label">Gross Margin</div>
+    <div class="value">62.3%</div>
+    <div class="delta up">Q4: 63-65% guided</div>
+  </div>
+  <div class="kpi">
+    <div class="label">Operating Margin</div>
+    <div class="value">50.8%</div>
+    <div class="delta up">+470bps YoY</div>
+  </div>
+  <div class="kpi">
+    <div class="label">Net Cash</div>
+    <div class="value">$63.7B</div>
+    <div class="delta up">Fortress balance sheet</div>
+  </div>
+  <div class="kpi">
+    <div class="label">Market Cap</div>
+    <div class="value">$1.64T</div>
+    <div class="delta neutral">23x fwd PE</div>
+  </div>
+  <div class="kpi">
+    <div class="label">FCF (FY2025)</div>
+    <div class="value">~$30B</div>
+    <div class="delta up">+15.2% YoY</div>
+  </div>
+  <div class="kpi">
+    <div class="label">2026 CapEx</div>
+    <div class="value">$52-56B</div>
+    <div class="delta neutral">+35% YoY</div>
+  </div>
+</div>
+
+<!-- SEGMENT MAP -->
+<section>
+  <h2>Segment Decomposition</h2>
+  <p class="section-intro">HPC (AI + data center) is the thesis driver at 55% of revenue and growing fastest. Smartphones provide a stable cash cow at 32%.</p>
+
+  <h3 style="color:var(--heading); margin: 18px 0 10px; font-size: 0.95rem;">Revenue by Platform (Q4 2025)</h3>
+  <div class="bar-chart">
+    <div class="bar-row">
+      <span class="bar-label">HPC (AI/DC)</span>
+      <div class="bar-track"><div class="bar-fill hpc" style="width:55%">55% — Thesis Driver</div></div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">Smartphone</span>
+      <div class="bar-track"><div class="bar-fill mobile" style="width:32%">32% — Cash Cow</div></div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">IoT</span>
+      <div class="bar-track"><div class="bar-fill iot" style="width:5%">5%</div></div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">Automotive</span>
+      <div class="bar-track"><div class="bar-fill auto" style="width:5%">5%</div></div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">DCE</span>
+      <div class="bar-track"><div class="bar-fill dce" style="width:1%">1%</div></div>
+    </div>
+  </div>
+
+  <h3 style="color:var(--heading); margin: 24px 0 10px; font-size: 0.95rem;">Technology Node Mix (Q4 2025 Wafer Revenue)</h3>
+  <div class="bar-chart">
+    <div class="bar-row">
+      <span class="bar-label">3nm</span>
+      <div class="bar-track"><div class="bar-fill n3" style="width:28%">28%</div></div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">5nm</span>
+      <div class="bar-track"><div class="bar-fill n5" style="width:35%">35%</div></div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">7nm</span>
+      <div class="bar-track"><div class="bar-fill n7" style="width:14%">14%</div></div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">Mature (>7nm)</span>
+      <div class="bar-track"><div class="bar-fill mature" style="width:23%">23%</div></div>
+    </div>
+  </div>
+  <p style="font-size:0.82rem; color:var(--muted); margin-top:8px;">Advanced nodes (7nm and below) = 77% of wafer revenue. AI accelerator revenue = high-teens % of total, growing at mid-to-high 50s % CAGR through 2029.</p>
+
+  <table style="margin-top:20px;">
+    <thead>
+      <tr><th>Segment</th><th>Role</th><th>Q4 2025 Share</th><th>Growth Trajectory</th><th>Margin Impact</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>HPC (AI/DC)</strong></td><td><span class="tag driver">Thesis Driver</span></td><td>55%</td><td style="color:var(--green)">Fastest — AI accelerator 50%+ CAGR</td><td>Highest ASPs; drives mix-up</td></tr>
+      <tr><td><strong>Smartphone</strong></td><td><span class="tag cow">Cash Cow</span></td><td>32%</td><td>Stable; Apple/Qualcomm/MediaTek</td><td>High volume, strong margins</td></tr>
+      <tr><td><strong>IoT</strong></td><td><span class="tag growth">Steady</span></td><td>5%</td><td>Moderate single-digit growth</td><td>Mixed; some mature nodes</td></tr>
+      <tr><td><strong>Automotive</strong></td><td><span class="tag growth">Emerging</span></td><td>5%</td><td>Secular growth; ADAS/EV content</td><td>Higher-margin specialty</td></tr>
+      <tr><td><strong>DCE</strong></td><td>Non-core</td><td>1%</td><td>Declining</td><td>Minimal impact</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- CUSTOMER REVENUE BUILD -->
+<section>
+  <h2>Customer-Level Revenue Build</h2>
+  <p class="section-intro">78% of revenue from top 10 customers. NVIDIA is overtaking Apple as the #1 customer in 2025, signaling the AI-driven structural shift.</p>
+
+  <h3 style="color:var(--heading); margin: 18px 0 10px; font-size: 0.95rem;">Estimated Customer Revenue Share (2025 → 2026E)</h3>
+  <div class="bar-chart">
+    <div class="bar-row">
+      <span class="bar-label">Apple</span>
+      <div class="bar-track"><div class="bar-fill apple" style="width:22%">~22% ($27B) → 22-25%</div></div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">NVIDIA</span>
+      <div class="bar-track"><div class="bar-fill nvidia" style="width:22%">~22% ($33B) → Growing</div></div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">Broadcom</span>
+      <div class="bar-track"><div class="bar-fill broadcom" style="width:13%">~11-15% → Rising fast</div></div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">MediaTek</span>
+      <div class="bar-track"><div class="bar-fill mediatek" style="width:9%">~9-10%</div></div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">Qualcomm</span>
+      <div class="bar-track"><div class="bar-fill qualcomm" style="width:8%">~8%</div></div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">AMD</span>
+      <div class="bar-track"><div class="bar-fill amd" style="width:7%">~7%</div></div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">Others</span>
+      <div class="bar-track"><div class="bar-fill others" style="width:19%">~19% (Intel, Sony, etc.)</div></div>
+    </div>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <h3>The NVIDIA Supercycle <span class="tag driver">Key Driver</span></h3>
+      <ul>
+        <li>NVIDIA projected to generate <strong>$33B</strong> in TSMC revenue in 2025 (~22% share)</li>
+        <li>Overtaking Apple as TSMC's #1 customer for the first time</li>
+        <li>Blackwell and Rubin architectures exclusively on TSMC advanced nodes</li>
+        <li>As NVIDIA's DC revenue grows 30%+ annually, TSMC captures every wafer</li>
+        <li><strong>Risk:</strong> Custom ASIC shift could reduce NVIDIA's TSMC wallet share over time</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Broadcom's Rapid Rise <span class="tag growth">Emerging #2/3</span></h3>
+      <ul>
+        <li>Could overtake NVIDIA as TSMC's #2 customer by 2026</li>
+        <li>Driven by custom XPU silicon for Google, Meta, OpenAI, and others</li>
+        <li>Custom ASIC shipments expected to grow 44% in 2026</li>
+        <li>TSMC benefits regardless of whether GPUs or ASICs win — it makes both</li>
+        <li>Broadcom's rise diversifies TSMC's AI exposure beyond just NVIDIA</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Apple: Stable Foundation <span class="tag cow">Cash Cow</span></h3>
+      <ul>
+        <li>~$27B in TSMC revenue (2025E), down from 25% to ~22% share as HPC grows faster</li>
+        <li>A-series, M-series chips exclusively TSMC — deepest design integration</li>
+        <li>Stable, predictable annual volume tied to iPhone/Mac cycles</li>
+        <li>Provides baseline utilization even during AI demand fluctuations</li>
+        <li>20+ year relationship — lowest churn risk of any customer</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top: 16px; border-color: var(--green);">
+    <h3>Key Insight: TSMC Wins Regardless of AI Chip Architecture</h3>
+    <p style="font-size: 0.9rem; margin-top: 8px;">Whether the AI compute market is dominated by NVIDIA GPUs, Broadcom custom ASICs, AMD MI-series, or hyperscaler in-house chips (Google TPU, AWS Trainium, Microsoft Maia) — <strong>they all need TSMC to manufacture them</strong>. TSMC is uniquely positioned as the "arms dealer" to all sides of the AI chip war. The only scenario where this breaks down is if a competitor achieves yield and node parity — and the data shows that gap is widening, not closing.</p>
+  </div>
+</section>
+
+<!-- COMPETITIVE MOAT -->
+<section>
+  <h2>Competitive Moat: Deep</h2>
+  <p class="section-intro">TSMC's moat is widening with each node generation. The cost of building a cutting-edge fab now exceeds $20B, and only TSMC can spread that across enough wafers to generate returns.</p>
+
+  <div class="cards">
+    <div class="card">
+      <h3>Yield Leadership <span class="tag deep">Widening</span></h3>
+      <ul>
+        <li><strong>TSMC 2nm:</strong> 70%+ yields in volume production (Q4 2025 HVM)</li>
+        <li><strong>Samsung 2nm:</strong> 55-60% yield by end of 2025, still ramping</li>
+        <li><strong>Intel 18A:</strong> 50-55% yield per industry reports</li>
+        <li>Yield gap at 2nm is <strong>15-20 percentage points</strong> — widest in a decade</li>
+        <li>N2P (enhanced 2nm) and A16 both on track for H2 2026 volume production</li>
+        <li>2nm capacity could reach 80-90K wafers/month by end of 2026</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Ecosystem Lock-In <span class="tag deep">Structural</span></h3>
+      <ul>
+        <li>Process Design Kits (PDKs) create multi-year porting costs to switch foundries</li>
+        <li>Open Innovation Platform (OIP) ecosystem with 1000+ IP partners</li>
+        <li>"Pure-play" model means TSMC never competes with customers — trust moat</li>
+        <li>Samsung/Intel compete with their own chip customers — structural conflict</li>
+        <li>Porting a complex AI chip to a different foundry = multi-year, multi-million-dollar risk</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Scale Economics <span class="tag deep">Compounding</span></h3>
+      <ul>
+        <li><strong>70% foundry market share</strong> overall; 90%+ at advanced nodes</li>
+        <li>Each $20B+ fab is only economical at TSMC's volume</li>
+        <li>Samsung foundry at 7.2% share cannot achieve competitive unit economics</li>
+        <li>Intel Foundry still reporting operating losses; struggling for external customers</li>
+        <li>N3 gross margin expected to cross corporate average in FY2026 — node maturity</li>
+        <li>Competitors would need $100B+ and 5+ years to reach parity — and the target keeps moving</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Management Credibility <span class="tag high">High</span></h3>
+      <ul>
+        <li>Consistent beat-and-raise execution across 8+ consecutive quarters</li>
+        <li>Revenue guidance historically conservative — actual results typically exceed</li>
+        <li>CEO C.C. Wei publicly dismisses "AI bubble" concerns, cites backlog visibility</li>
+        <li>Capital allocation discipline: $52-56B CapEx guided with 70-80% to advanced nodes</li>
+        <li>Fortress balance sheet: $97.7B cash, $34B debt, 0.20x D/E ratio</li>
+        <li>Stable dividend growth; prioritizes reinvestment over buybacks (correct for a growth compounder)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- FORWARD REVENUE MODEL -->
+<section>
+  <h2>Forward Revenue Model</h2>
+  <p class="section-intro">Three-scenario revenue build to FY2028, anchored on management's FY2026 ~30% growth guidance and AI accelerator CAGR of mid-to-high 50s%.</p>
+
+  <table>
+    <thead>
+      <tr><th></th><th>FY2024A</th><th>FY2025A</th><th>FY2026E</th><th>FY2027E</th><th>FY2028E</th></tr>
+    </thead>
+    <tbody>
+      <tr style="font-weight:600; color:var(--green);">
+        <td>Bull Case Revenue ($B)</td><td>$90B</td><td>$122B</td><td>$163B</td><td>$208B</td><td>$254B</td>
+      </tr>
+      <tr><td style="color:var(--muted); padding-left:24px;">YoY Growth</td><td>34%</td><td>36%</td><td>34%</td><td>28%</td><td>22%</td></tr>
+      <tr style="font-weight:600; color:var(--blue);">
+        <td>Base Case Revenue ($B)</td><td>$90B</td><td>$122B</td><td>$159B</td><td>$195B</td><td>$230B</td>
+      </tr>
+      <tr><td style="color:var(--muted); padding-left:24px;">YoY Growth</td><td>34%</td><td>36%</td><td>30%</td><td>23%</td><td>18%</td></tr>
+      <tr style="font-weight:600; color:var(--red);">
+        <td>Bear Case Revenue ($B)</td><td>$90B</td><td>$122B</td><td>$149B</td><td>$172B</td><td>$192B</td>
+      </tr>
+      <tr><td style="color:var(--muted); padding-left:24px;">YoY Growth</td><td>34%</td><td>36%</td><td>22%</td><td>15%</td><td>12%</td></tr>
+    </tbody>
+  </table>
+
+  <h3 style="color:var(--heading); margin: 24px 0 10px; font-size: 0.95rem;">Margin Path to FY2028</h3>
+  <table>
+    <thead>
+      <tr><th></th><th>FY2025A</th><th>FY2026E</th><th>FY2027E</th><th>FY2028E</th><th>Key Assumptions</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Gross Margin</strong></td><td>59.5%</td><td>60-62%</td><td>61-63%</td><td>62-64%</td><td>N3 maturation offset by N2 ramp dilution (2-3%) + overseas fab dilution (2-4%)</td></tr>
+      <tr><td><strong>Operating Margin</strong></td><td>50.8%</td><td>51-53%</td><td>52-54%</td><td>53-55%</td><td>R&D leverage as advanced nodes mature; SGA scales sub-linearly</td></tr>
+      <tr><td><strong>Net Margin</strong></td><td>45.1%</td><td>44-46%</td><td>45-47%</td><td>46-48%</td><td>Low leverage; minimal interest expense vs. cash generation</td></tr>
+      <tr><td><strong>FCF Margin</strong></td><td>~25%</td><td>~20-22%</td><td>~24-26%</td><td>~28-30%</td><td>CapEx peak in 2026-2027 then normalizes; FCF inflects sharply</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size: 0.82rem; color: var(--amber); margin-top: 10px;"><strong>Margin headwinds to monitor:</strong> 2-3% gross margin dilution from N2 ramp and 2-4% from overseas fab scaling (Arizona, Japan, Germany). Management expects these to be offset by pricing power and mix improvement over time.</p>
+</section>
+
+<!-- VALUATION -->
+<section>
+  <h2>Valuation</h2>
+  <p class="section-intro">Forward valuation to FY2028, discounted back. TSMC deserves a premium multiple for its monopoly position, but the geopolitical discount must be modeled.</p>
+
+  <div class="scenario-grid">
+    <div class="scenario">
+      <h4 style="color:var(--green);">Bull Case</h4>
+      <div class="price bull">$520</div>
+      <p style="font-size:0.82rem; color:var(--muted);">FY2028 target, discounted to present: ~$430</p>
+      <ul class="detail">
+        <li>FY2028 Rev: $254B</li>
+        <li>Operating Margin: 55%</li>
+        <li>EBITDA: ~$158B</li>
+        <li>Multiple: 22x (monopoly premium)</li>
+        <li>Implied CAGR: ~17%</li>
+      </ul>
+    </div>
+    <div class="scenario">
+      <h4 style="color:var(--blue);">Base Case</h4>
+      <div class="price base">$430</div>
+      <p style="font-size:0.82rem; color:var(--muted);">FY2028 target, discounted to present: ~$385</p>
+      <ul class="detail">
+        <li>FY2028 Rev: $230B</li>
+        <li>Operating Margin: 53%</li>
+        <li>EBITDA: ~$138B</li>
+        <li>Multiple: 20x (sector premium)</li>
+        <li>Implied CAGR: ~11%</li>
+      </ul>
+    </div>
+    <div class="scenario">
+      <h4 style="color:var(--red);">Bear Case</h4>
+      <div class="price bear">$280</div>
+      <p style="font-size:0.82rem; color:var(--muted);">FY2028 target, discounted to present: ~$240</p>
+      <ul class="detail">
+        <li>FY2028 Rev: $192B</li>
+        <li>Operating Margin: 48%</li>
+        <li>EBITDA: ~$104B</li>
+        <li>Multiple: 16x (geo risk discount)</li>
+        <li>Implied return: ~-12%</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 style="color:var(--heading); margin: 28px 0 10px; font-size: 0.95rem;">Sensitivity Matrix — Per-Share Value ($)</h3>
+  <div class="val-matrix">
+    <table>
+      <thead>
+        <tr><th>FY28 Rev Growth / Exit Multiple →</th><th>16x</th><th>18x</th><th>20x</th><th>22x</th><th>24x</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>12% (Bear)</strong></td><td style="color:var(--red);">$240</td><td>$270</td><td>$300</td><td>$330</td><td>$360</td></tr>
+        <tr><td><strong>18% (Base)</strong></td><td>$290</td><td>$325</td><td class="highlight">$385</td><td>$420</td><td>$455</td></tr>
+        <tr><td><strong>22% (Bull)</strong></td><td>$325</td><td>$365</td><td>$405</td><td class="highlight">$430</td><td>$480</td></tr>
+        <tr><td><strong>26% (Super Bull)</strong></td><td>$365</td><td>$410</td><td>$455</td><td>$500</td><td style="color:var(--green);">$545</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size: 0.82rem; color: var(--muted); margin-top: 8px;">Current price $316.50 sits between the bear and base case at 20x exit multiple. At base case assumptions, the stock offers ~22% upside to fair value ($385) with an 11% annualized CAGR — attractive for a high-quality compounder with this moat depth.</p>
+
+  <h3 style="color:var(--heading); margin: 28px 0 10px; font-size: 0.95rem;">Management Guidance Validation</h3>
+  <div class="card">
+    <ul>
+      <li><strong>Mgmt FY2026 guidance:</strong> ~30% revenue growth in USD terms → implies ~$159B</li>
+      <li><strong>Our base case:</strong> $159B — aligned with guidance (TSMC sandbagging history suggests slight beat)</li>
+      <li><strong>Sell-side consensus:</strong> ~$160B — tight cluster around management's number</li>
+      <li><strong>Historical pattern:</strong> TSMC has beaten quarterly guidance in 8+ consecutive quarters</li>
+      <li><strong>Verdict:</strong> <span style="color:var(--green); font-weight:600;">Achievable — likely conservative.</span> TSMC's guidance style is consistent sandbagging. Expect actual FY2026 to come in at $162-168B.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- THESIS KILL SCENARIOS -->
+<section>
+  <h2>Thesis Kill Scenarios</h2>
+  <p class="section-intro">The specific, named events that would invalidate the investment thesis. Not generic risks — concrete scenarios with estimated probabilities.</p>
+
+  <div class="gauge-row">
+    <div class="gauge-item">
+      <h4>1. China-Taiwan Military Conflict</h4>
+      <div class="gauge-bar"><div class="gauge-fill crit" style="width:95%"></div></div>
+      <div class="gauge-meta"><span>Severity: Catastrophic</span><span>Prob (5yr): 2-5%</span></div>
+      <p style="font-size:0.8rem; color:var(--muted); margin-top:6px;">A military blockade or invasion would halt production of 90%+ of the world's advanced chips. Bloomberg estimates $10T global GDP impact in year one. TSMC stock would likely fall 60-80%. This is the permanent impairment risk — low probability but existential severity. Mitigant: Arizona, Japan, Germany fabs provide partial insurance but would take years to replace Taiwan capacity.</p>
+    </div>
+    <div class="gauge-item">
+      <h4>2. AI Demand Cliff / CapEx Pullback</h4>
+      <div class="gauge-bar"><div class="gauge-fill hi" style="width:70%"></div></div>
+      <div class="gauge-meta"><span>Severity: High</span><span>Prob (2yr): 15-20%</span></div>
+      <p style="font-size:0.8rem; color:var(--muted); margin-top:6px;">If hyperscaler AI CapEx spending decelerates sharply (enterprise ROI disappointment, recession, or AI winter), HPC segment growth stalls. TSMC has $52-56B committed CapEx in 2026 that becomes stranded if demand softens. Mitigant: TSMC's customer diversification across smartphones, auto, IoT provides a floor. Even in a severe AI slowdown, ~45% of revenue is non-HPC.</p>
+    </div>
+    <div class="gauge-item">
+      <h4>3. Samsung/Intel Achieve Node Parity</h4>
+      <div class="gauge-bar"><div class="gauge-fill med" style="width:40%"></div></div>
+      <div class="gauge-meta"><span>Severity: Moderate</span><span>Prob (5yr): 5-10%</span></div>
+      <p style="font-size:0.8rem; color:var(--muted); margin-top:6px;">If Samsung or Intel close the yield gap at 2nm or below, TSMC loses pricing power and market share. Current data suggests the gap is widening (TSMC 70%+ vs Samsung 55-60% vs Intel 50-55% at 2nm-equivalent). Samsung's $73B 2026 investment is the credible threat. Mitigant: Yield gap has widened at every node transition for 5+ years. Ecosystem lock-in persists even if yield parity is achieved.</p>
+    </div>
+    <div class="gauge-item">
+      <h4>4. US-China Tariff Escalation Targeting TSMC</h4>
+      <div class="gauge-bar"><div class="gauge-fill hi" style="width:55%"></div></div>
+      <div class="gauge-meta"><span>Severity: Moderate-High</span><span>Prob (2yr): 20-25%</span></div>
+      <p style="font-size:0.8rem; color:var(--muted); margin-top:6px;">Further export controls or tariffs could restrict TSMC's ability to serve Chinese customers (currently ~10% of revenue). Forced reshoring requirements could also raise costs. Mitigant: TSMC is already building in US/Japan/Germany. Chinese revenue share has been declining as restrictions tighten — the market is largely pricing this in.</p>
+    </div>
+    <div class="gauge-item">
+      <h4>5. Customer Insourcing at Scale</h4>
+      <div class="gauge-bar"><div class="gauge-fill med" style="width:30%"></div></div>
+      <div class="gauge-meta"><span>Severity: Low-Moderate</span><span>Prob (5yr): 5%</span></div>
+      <p style="font-size:0.8rem; color:var(--muted); margin-top:6px;">If a major customer (Apple, NVIDIA) decides to build its own foundry. This is theoretically possible but practically implausible — even Intel, with decades of fab experience, can't match TSMC yields. The $20B+ cost per fab and 5+ year timeline make insourcing a generational decision. Mitigant: Not economically rational for any single customer. TSMC's pure-play model ensures alignment.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SYMMETRIC BEAR CASE -->
+<section>
+  <h2>Mandatory Bear-Case Reassessment</h2>
+  <p class="section-intro">Every bull thesis must be stress-tested symmetrically. Here's what the bears see.</p>
+
+  <div class="cards">
+    <div class="card" style="border-color: var(--red);">
+      <h3>What the Market May Be Underpricing <span class="tag risk">Bear View</span></h3>
+      <ul>
+        <li><strong>Geopolitical discount is too small:</strong> At 23x forward PE, the market is pricing TSMC like a normal compounder, not like a company with 70% of production in a geopolitical flashpoint</li>
+        <li><strong>CapEx cycle risk:</strong> $52-56B in 2026 CapEx is enormous. If AI demand disappoints, TSMC faces its first meaningful overcapacity risk since the 2019 trade war</li>
+        <li><strong>Margin dilution is real:</strong> 2-3% from N2 ramp + 2-4% from overseas fabs = potential 4-7% gross margin headwind over 2026-2028</li>
+        <li><strong>Customer concentration:</strong> NVIDIA + Apple = ~44% of revenue. Both could slow simultaneously (AI winter + weak iPhone cycle)</li>
+        <li><strong>Peak cycle valuation:</strong> Bears argue the market is valuing TSMC on peak-cycle AI earnings. Normalized earnings at 18-20% growth command 18-20x, not 23x</li>
+        <li><strong>ADR structure:</strong> TSM ADR holders have limited legal recourse in a Taiwan-specific crisis</li>
+      </ul>
+    </div>
+    <div class="card" style="border-color: var(--green);">
+      <h3>Why the Bull Thesis Holds <span class="tag deep">Rebuttal</span></h3>
+      <ul>
+        <li><strong>Geopolitical risk is known and priced:</strong> TSMC trades at a persistent 20-30% discount to Western peers (ASML trades at 30x+). The discount is the geopolitical hedge</li>
+        <li><strong>CapEx is customer-committed:</strong> 70-80% is advanced node; demand is pre-committed via design wins that take 2-3 years to play out</li>
+        <li><strong>Margin dilution is temporary:</strong> N3 margin crossed corporate average within 2 years; N2 will follow. Overseas fabs serve as strategic insurance, not margin drags</li>
+        <li><strong>No substitute exists:</strong> Even if AI growth slows 50%, TSMC still grows 15%+ from smartphone + auto + IoT secular trends</li>
+        <li><strong>FCF inflection coming:</strong> CapEx peaks 2026-2027 then normalizes. FCF margin should expand from ~22% to ~28-30% by FY2028</li>
+        <li><strong>The "arms dealer" position:</strong> Whether GPUs, ASICs, or custom chips win — TSMC manufactures them all. Thesis is agnostic to AI architecture outcomes</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- RECOMMENDATION -->
+<section>
+  <h2>Recommendation</h2>
+
+  <div class="thesis-banner" style="text-align: center;">
+    <h2 style="font-size: 1.3rem;">BUY — High Conviction</h2>
+    <div class="driver" style="font-size: 1.5rem;">Fair Value Range: $385 (Base) — $430 (Bull)</div>
+    <p style="font-size: 1rem;">At $316.50, TSM offers 22-36% upside to fair value with an 11-17% annualized CAGR to FY2028. For a monopoly asset with a widening moat, growing 25-30% annually, generating $30B+ in FCF on a fortress balance sheet — this is an attractive entry.</p>
+
+    <div class="thesis-meta" style="justify-content: center; margin-top: 24px;">
+      <div class="thesis-meta-item">
+        <div class="label">Entry Range</div>
+        <div class="val green">$290–$330</div>
+      </div>
+      <div class="thesis-meta-item">
+        <div class="label">Position Size</div>
+        <div class="val">4-6% of portfolio</div>
+      </div>
+      <div class="thesis-meta-item">
+        <div class="label">Time Horizon</div>
+        <div class="val">2-3 years</div>
+      </div>
+      <div class="thesis-meta-item">
+        <div class="label">Stop-Loss Level</div>
+        <div class="val" style="color:var(--red);">$240 (-24%)</div>
+      </div>
+      <div class="thesis-meta-item">
+        <div class="label">Next Review</div>
+        <div class="val">Q1 ER (Apr 16)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top: 16px;">
+    <h3>Thesis State Summary</h3>
+    <table>
+      <tbody>
+        <tr><td><strong>Thesis</strong></td><td>TSMC is an irreplaceable monopoly on AI-era chip manufacturing with a widening moat and multi-decade runway</td></tr>
+        <tr><td><strong>Status</strong></td><td style="color:var(--green); font-weight:600;">Strong — supported by Q4 results, 30% FY2026 guidance, and advancing technology lead</td></tr>
+        <tr><td><strong>FY2026E Revenue</strong></td><td>$159B (base) — likely conservative per historical sandbagging pattern</td></tr>
+        <tr><td><strong>FY2028E Revenue</strong></td><td>$230B (base) / $254B (bull)</td></tr>
+        <tr><td><strong>Fair Value Range</strong></td><td>$240 (bear) | $385 (base) | $430 (bull)</td></tr>
+        <tr><td><strong>Current Price</strong></td><td>$316.50 — 22% below base fair value</td></tr>
+        <tr><td><strong>Implied CAGR to Base</strong></td><td>~11% annualized (attractive for quality compounder)</td></tr>
+        <tr><td><strong>Primary Risk</strong></td><td>China-Taiwan geopolitical scenario (low probability, catastrophic severity)</td></tr>
+        <tr><td><strong>Next Catalyst</strong></td><td>Q1 FY2026 earnings — April 16, 2026 (consensus expects beat)</td></tr>
+        <tr><td><strong>Action</strong></td><td style="color:var(--green); font-weight:600;">BUY in $290-$330 range. Hold if already owned. Add on any geopolitical-driven dips to $270-$290.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- SOURCES -->
+<div class="sources">
+  <h3>Sources</h3>
+  <a href="https://investor.tsmc.com/english/quarterly-results/2025/q4" target="_blank">TSMC — Q4 2025 Quarterly Results</a>
+  <a href="https://futurumgroup.com/insights/tsmc-q4-fy-2025-results-and-fy-2026-outlook-signal-ai-led-growth/" target="_blank">Futurum Group — TSMC Q4 FY2025 Results and 2026 Outlook</a>
+  <a href="https://markets.financialcontent.com/stocks/article/tokenring-2026-1-22-tsmcs-56-billion-gamble-inside-the-2026-capex-surge-fueling-the-ai-revolution" target="_blank">FinancialContent — TSMC's $56B Capex Surge</a>
+  <a href="https://www.datacenterdynamics.com/en/news/tsmc-announces-2026-capex-spend-of-56bn-after-posting-eighth-consecutive-quarter-of-growth/" target="_blank">DCD — TSMC 2026 CapEx $56B</a>
+  <a href="https://www.cnbc.com/2026/01/26/nvidia-set-to-supplant-apple-as-tsmcs-largest-customer.html" target="_blank">CNBC — NVIDIA Set to Supplant Apple as TSMC's Top Customer</a>
+  <a href="https://semiwiki.com/semiconductor-manufacturers/tsmc/366523-tsmc-vs-intel-foundry-vs-samsung-foundry-2026/" target="_blank">SemiWiki — TSMC vs Intel vs Samsung Foundry 2026</a>
+  <a href="https://www.klover.ai/tsmc-ai-fabricating-dominance-chip-manufacturing-leadership-ai-era/" target="_blank">Klover.ai — TSMC AI Fabricating Dominance</a>
+  <a href="https://stockanalysis.com/stocks/tsm/statistics/" target="_blank">StockAnalysis — TSM Statistics & Valuation</a>
+  <a href="https://stockanalysis.com/stocks/tsm/financials/" target="_blank">StockAnalysis — TSM Financials</a>
+  <a href="https://www.tipranks.com/stocks/tsm/forecast" target="_blank">TipRanks — TSM Stock Forecast & Price Targets</a>
+  <a href="https://rijnberkinvestinsights.substack.com/p/tsmc-a-39-roe-30-billion-in-fcf-forecast" target="_blank">Rijnberk Invest Insights — TSMC: 39% ROE, $30B FCF</a>
+  <a href="https://247wallst.com/investing/2026/04/02/how-big-will-taiwan-semiconductors-beat-be-on-april-16/" target="_blank">24/7 Wall St — How Big Will TSMC's Beat Be on April 16?</a>
+  <a href="https://seekingalpha.com/article/4855898-tsmc-why-2026-will-be-even-bigger" target="_blank">Seeking Alpha — TSMC: Why 2026 Will Be Even Bigger</a>
+  <a href="https://www.deepresearchglobal.com/p/tsmc-swot-analysis-report" target="_blank">Deep Research Global — TSMC SWOT Analysis 2026</a>
+  <a href="https://www.techi.com/tsmc-stock/" target="_blank">Techi — TSMC Stock Analysis & Forecast 2026</a>
+</div>
+
+</div>
+
+<div class="footer">
+  <p>TSM Equity Research — April 2, 2026 | Iterative Thesis Construction (Phase 1)</p>
+  <p style="margin-top:4px;">Data from TSMC Investor Relations, StockAnalysis, TipRanks, SemiWiki, public filings, and analyst estimates.</p>
+  <p style="margin-top:4px;">This report is for informational purposes only and does not constitute investment advice.</p>
+</div>
+
+</body>
+</html>
