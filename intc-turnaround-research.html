@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INTC — Turnaround Equity Research | Intel Corporation</title>
+<style>
+  :root {
+    --bg: #0a0c10;
+    --card: #12151e;
+    --border: #1e2231;
+    --accent: #0068b5;
+    --accent2: #3b82f6;
+    --blue: #3b82f6;
+    --blue-dark: #0068b5;
+    --cyan: #06b6d4;
+    --green: #10b981;
+    --red: #ef4444;
+    --amber: #f59e0b;
+    --text: #d1d5db;
+    --muted: #6b7280;
+    --heading: #f3f4f6;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, #060e1a 0%, #0d1117 40%, #0a0e18 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 60px 40px 48px;
+    text-align: center;
+  }
+  .hero h1 { font-size: 2.8rem; font-weight: 800; color: var(--heading); letter-spacing: -1.5px; margin-bottom: 6px; }
+  .hero .ticker { font-size: 1.3rem; font-weight: 700; color: var(--accent2); margin-bottom: 12px; }
+  .hero .subtitle { font-size: 1.05rem; color: var(--muted); max-width: 700px; margin: 0 auto 24px; }
+  .badge-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+  .badge { display: inline-block; padding: 5px 14px; border-radius: 20px; font-size: 0.78rem; font-weight: 600; }
+  .badge.speculative { background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.3); color: var(--amber); }
+  .badge.hold { background: rgba(107,114,128,0.15); border: 1px solid rgba(107,114,128,0.3); color: #9ca3af; }
+  .badge.date { background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2); color: #93c5fd; }
+  .badge.price { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text); }
+  .badge.warning { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: var(--red); }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 44px 24px; }
+
+  /* Turnaround Banner */
+  .thesis-banner {
+    background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(0,104,181,0.03));
+    border: 1px solid rgba(59,130,246,0.25);
+    border-radius: 16px;
+    padding: 32px 36px;
+    margin-bottom: 48px;
+  }
+  .thesis-banner h2 { font-size: 1.1rem; color: var(--accent2); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+  .thesis-banner .driver { font-size: 1.35rem; font-weight: 700; color: var(--heading); margin-bottom: 12px; }
+  .thesis-banner p { font-size: 0.95rem; color: var(--text); max-width: 850px; }
+  .thesis-meta { display: flex; gap: 32px; margin-top: 18px; flex-wrap: wrap; }
+  .thesis-meta-item .label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); }
+  .thesis-meta-item .val { font-size: 1.1rem; font-weight: 700; color: var(--heading); }
+  .thesis-meta-item .val.green { color: var(--green); }
+  .thesis-meta-item .val.amber { color: var(--amber); }
+  .thesis-meta-item .val.red { color: var(--red); }
+  .thesis-meta-item .val.blue { color: var(--blue); }
+
+  /* Survival Warning Banner */
+  .survival-banner {
+    background: linear-gradient(135deg, rgba(245,158,11,0.06), rgba(239,68,68,0.04));
+    border: 1px solid rgba(245,158,11,0.3);
+    border-radius: 12px;
+    padding: 18px 24px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .survival-banner .icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 2px; }
+  .survival-banner p { font-size: 0.88rem; color: var(--text); }
+  .survival-banner strong { color: var(--amber); }
+
+  /* KPIs */
+  .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 48px; }
+  .kpi { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 18px; text-align: center; }
+  .kpi .label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 4px; }
+  .kpi .value { font-size: 1.6rem; font-weight: 700; color: var(--heading); }
+  .kpi .delta { font-size: 0.78rem; margin-top: 2px; }
+  .kpi .delta.up { color: var(--green); }
+  .kpi .delta.down { color: var(--red); }
+  .kpi .delta.neutral { color: var(--amber); }
+
+  /* Sections */
+  section { margin-bottom: 52px; }
+  section > h2 { font-size: 1.5rem; font-weight: 700; color: var(--heading); padding-bottom: 10px; border-bottom: 2px solid var(--accent); display: inline-block; margin-bottom: 6px; }
+  .section-intro { color: var(--muted); margin: 8px 0 20px; font-size: 0.9rem; }
+
+  /* Cards */
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 16px; margin-top: 16px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; transition: border-color 0.2s; }
+  .card:hover { border-color: var(--blue); }
+  .card h3 { font-size: 1.05rem; color: var(--heading); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .card ul { padding-left: 16px; margin-top: 6px; }
+  .card li { font-size: 0.88rem; margin-bottom: 5px; }
+  .tag { display: inline-block; font-size: 0.65rem; padding: 2px 8px; border-radius: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; }
+  .tag.deep { background: rgba(16,185,129,0.15); color: var(--green); }
+  .tag.high { background: rgba(59,130,246,0.15); color: var(--blue); }
+  .tag.driver { background: rgba(59,130,246,0.15); color: var(--blue); }
+  .tag.cow { background: rgba(245,158,11,0.15); color: var(--amber); }
+  .tag.growth { background: rgba(6,182,212,0.15); color: var(--cyan); }
+  .tag.risk { background: rgba(239,68,68,0.15); color: var(--red); }
+  .tag.pivot { background: rgba(0,104,181,0.2); color: #60a5fa; }
+  .tag.binary { background: rgba(245,158,11,0.15); color: var(--amber); }
+  .tag.warn { background: rgba(239,68,68,0.15); color: var(--red); }
+  .tag.positive { background: rgba(16,185,129,0.15); color: var(--green); }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 0.84rem; }
+  th { text-align: left; padding: 10px 12px; background: rgba(255,255,255,0.02); color: var(--muted); font-weight: 600; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); }
+  td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.03); }
+  tr:hover td { background: rgba(59,130,246,0.02); }
+
+  /* Bar charts */
+  .bar-chart { margin: 16px 0; }
+  .bar-row { display: flex; align-items: center; margin-bottom: 8px; }
+  .bar-label { width: 150px; font-size: 0.8rem; color: var(--muted); flex-shrink: 0; }
+  .bar-track { flex: 1; height: 26px; background: rgba(255,255,255,0.03); border-radius: 5px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 5px; display: flex; align-items: center; padding-left: 8px; font-size: 0.72rem; font-weight: 600; color: #fff; min-width: 36px; }
+  .bar-fill.ccg { background: linear-gradient(90deg, #0068b5, #004d87); }
+  .bar-fill.dcai { background: linear-gradient(90deg, #3b82f6, #1d4ed8); }
+  .bar-fill.foundry { background: linear-gradient(90deg, #06b6d4, #0e7490); }
+  .bar-fill.other { background: linear-gradient(90deg, #6b7280, #4b5563); }
+  .bar-fill.intel-server { background: linear-gradient(90deg, #0068b5, #004d87); }
+  .bar-fill.amd-server { background: linear-gradient(90deg, #ef4444, #b91c1c); }
+  .bar-fill.nvidia-ai { background: linear-gradient(90deg, #76b900, #4a7a00); }
+  .bar-fill.intel-ai { background: linear-gradient(90deg, #3b82f6, #1d4ed8); }
+  .bar-fill.amd-ai { background: linear-gradient(90deg, #ef4444, #b91c1c); }
+  .bar-fill.tsmc-yield { background: linear-gradient(90deg, #10b981, #059669); }
+  .bar-fill.intel-yield { background: linear-gradient(90deg, #f59e0b, #d97706); }
+  .bar-fill.samsung-yield { background: linear-gradient(90deg, #6b7280, #4b5563); }
+  .bar-fill.progress-good { background: linear-gradient(90deg, #10b981, #059669); }
+  .bar-fill.progress-mid { background: linear-gradient(90deg, #f59e0b, #d97706); }
+  .bar-fill.progress-bad { background: linear-gradient(90deg, #ef4444, #991b1b); }
+
+  /* Valuation matrix */
+  .val-matrix { overflow-x: auto; }
+  .val-matrix table th, .val-matrix table td { text-align: center; min-width: 80px; }
+  .val-matrix .highlight { background: rgba(59,130,246,0.08); font-weight: 700; color: var(--blue); }
+  .val-matrix .highlight-bull { background: rgba(16,185,129,0.08); font-weight: 700; color: var(--green); }
+  .val-matrix .highlight-bear { background: rgba(239,68,68,0.08); font-weight: 700; color: var(--red); }
+
+  /* Scenario cards */
+  .scenario-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 16px; }
+  @media (max-width: 768px) { .scenario-grid { grid-template-columns: 1fr; } }
+  .scenario { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; text-align: center; }
+  .scenario h4 { margin-bottom: 8px; font-size: 1rem; }
+  .scenario .price { font-size: 2rem; font-weight: 800; margin: 8px 0; }
+  .scenario .price.bull { color: var(--green); }
+  .scenario .price.base { color: var(--blue); }
+  .scenario .price.bear { color: var(--red); }
+  .scenario .detail { font-size: 0.82rem; color: var(--muted); text-align: left; margin-top: 12px; }
+  .scenario .detail li { margin-bottom: 4px; }
+  .scenario .prob { font-size: 0.75rem; font-weight: 700; margin-top: 10px; padding: 4px 10px; border-radius: 8px; display: inline-block; }
+  .scenario .prob.bull { background: rgba(16,185,129,0.1); color: var(--green); }
+  .scenario .prob.base { background: rgba(59,130,246,0.1); color: var(--blue); }
+  .scenario .prob.bear { background: rgba(239,68,68,0.1); color: var(--red); }
+
+  /* Risk gauge */
+  .gauge-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; margin-top: 16px; }
+  .gauge-item { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+  .gauge-item h4 { color: var(--heading); margin-bottom: 6px; font-size: 0.9rem; }
+  .gauge-bar { height: 7px; background: rgba(255,255,255,0.04); border-radius: 4px; margin: 8px 0 5px; overflow: hidden; }
+  .gauge-fill { height: 100%; border-radius: 4px; }
+  .gauge-fill.crit { background: var(--red); }
+  .gauge-fill.hi { background: var(--amber); }
+  .gauge-fill.med { background: var(--blue); }
+  .gauge-fill.lo { background: var(--green); }
+  .gauge-meta { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--muted); }
+
+  /* Turnaround Scorecard */
+  .scorecard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin-top: 16px; }
+  .scorecard-item { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+  .scorecard-item .sc-title { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 8px; }
+  .scorecard-item .sc-grade { font-size: 2.2rem; font-weight: 900; margin-bottom: 4px; }
+  .scorecard-item .sc-grade.a { color: var(--green); }
+  .scorecard-item .sc-grade.b { color: #60a5fa; }
+  .scorecard-item .sc-grade.c { color: var(--amber); }
+  .scorecard-item .sc-grade.d { color: var(--red); }
+  .scorecard-item .sc-label { font-size: 0.88rem; color: var(--heading); font-weight: 600; margin-bottom: 6px; }
+  .scorecard-item .sc-bar { height: 5px; background: rgba(255,255,255,0.04); border-radius: 3px; margin: 8px 0; overflow: hidden; }
+  .scorecard-item .sc-fill { height: 100%; border-radius: 3px; }
+  .scorecard-item p { font-size: 0.82rem; color: var(--muted); }
+
+  /* Sum-of-parts */
+  .sop-table { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-top: 16px; }
+  .sop-table table { margin: 0; }
+  .sop-table th { background: rgba(59,130,246,0.05); }
+  .sop-total { background: rgba(59,130,246,0.06); font-weight: 700; }
+  .sop-total td { color: var(--heading); border-top: 1px solid var(--border); }
+
+  /* Timeline */
+  .timeline { margin-top: 16px; position: relative; padding-left: 24px; }
+  .timeline::before { content: ''; position: absolute; left: 0; top: 8px; bottom: 8px; width: 2px; background: var(--border); }
+  .tl-item { position: relative; margin-bottom: 20px; }
+  .tl-item::before { content: ''; position: absolute; left: -28px; top: 6px; width: 10px; height: 10px; border-radius: 50%; background: var(--blue-dark); border: 2px solid var(--accent2); }
+  .tl-item .tl-date { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent2); font-weight: 700; }
+  .tl-item .tl-event { font-size: 0.9rem; color: var(--heading); font-weight: 600; margin: 2px 0; }
+  .tl-item .tl-desc { font-size: 0.82rem; color: var(--muted); }
+  .tl-item.positive::before { background: var(--green); border-color: var(--green); }
+  .tl-item.negative::before { background: var(--red); border-color: var(--red); }
+  .tl-item.pending::before { background: var(--amber); border-color: var(--amber); }
+
+  /* Sources */
+  .sources { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-top: 32px; }
+  .sources h3 { color: var(--heading); margin-bottom: 10px; font-size: 0.9rem; }
+  .sources a { color: var(--cyan); text-decoration: none; font-size: 0.78rem; display: block; margin-bottom: 4px; }
+  .sources a:hover { text-decoration: underline; }
+  .footer { text-align: center; padding: 36px 20px; border-top: 1px solid var(--border); margin-top: 36px; }
+  .footer p { font-size: 0.75rem; color: var(--muted); }
+
+  @media (max-width: 640px) {
+    .hero h1 { font-size: 1.8rem; }
+    .hero { padding: 36px 18px 28px; }
+    .cards { grid-template-columns: 1fr; }
+    .kpi-row { grid-template-columns: 1fr 1fr; }
+    .scenario-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="ticker">NASDAQ: INTC</div>
+  <h1>Intel Corporation</h1>
+  <p class="subtitle">The most ambitious corporate turnaround in semiconductor history — a former monopolist attempting to reinvent itself as a competitive foundry while its core CPU franchise faces structural erosion.</p>
+  <div class="badge-row">
+    <span class="badge warning">SPECULATIVE — Binary Foundry Outcome</span>
+    <span class="badge hold">Consensus: Hold</span>
+    <span class="badge price">~$44–$48 (Apr 2, 2026)</span>
+    <span class="badge date">Thesis Target: FY2028</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- TURNAROUND THESIS DRIVER -->
+<div class="thesis-banner">
+  <h2>Turnaround Thesis Driver</h2>
+  <div class="driver">Intel is attempting a dual transformation — from IDM monopolist to external foundry — while simultaneously restructuring $53B in revenue, replacing its entire leadership team, and racing to close a 2-3 year technology gap against TSMC.</div>
+  <p>Under new CEO Lip-Bu Tan (appointed March 2025), Intel is pursuing the most operationally complex pivot in semiconductor history: transforming its money-losing foundry from an internal manufacturing arm into a commercially viable external business, while defending a declining CPU franchise against AMD and ARM. The 18A node entered high-volume manufacturing in October 2025, yields are improving, but zero publicly committed external customers remain the critical missing piece. This is a sum-of-parts story with binary foundry outcomes — success recreates a $75+ stock; failure means a stranded-asset write-down scenario toward $20.</p>
+  <div class="thesis-meta">
+    <div class="thesis-meta-item">
+      <div class="label">Conviction Level</div>
+      <div class="val amber">Speculative</div>
+    </div>
+    <div class="thesis-meta-item">
+      <div class="label">Turnaround Type</div>
+      <div class="val blue">Strategic Pivot + SOP</div>
+    </div>
+    <div class="thesis-meta-item">
+      <div class="label">Target Year</div>
+      <div class="val">FY 2028</div>
+    </div>
+    <div class="thesis-meta-item">
+      <div class="label">Mgmt Credibility</div>
+      <div class="val amber">Rebuilding</div>
+    </div>
+    <div class="thesis-meta-item">
+      <div class="label">Foundry Customer Status</div>
+      <div class="val red">None Public</div>
+    </div>
+    <div class="thesis-meta-item">
+      <div class="label">Next Catalyst</div>
+      <div class="val">External Customer Win</div>
+    </div>
+  </div>
+</div>
+
+<!-- SURVIVAL WARNING -->
+<div class="survival-banner">
+  <div class="icon">&#9888;</div>
+  <p><strong>Turnaround risk disclosure:</strong> Intel is not a distressed situation (liquidity runway is 3-4 years), but the foundry thesis requires an external customer win by late 2026 to justify continued 14A investment. Failure to secure an anchor customer could trigger a $30B+ stranded-asset impairment, 14A cancellation, and reversion to a products-only company trading at 8-10x depressed earnings (~$20/share). This report models three distinct outcomes, not a single fair value.</p>
+</div>
+
+<!-- KPI ROW -->
+<div class="kpi-row">
+  <div class="kpi">
+    <div class="label">FY2025 Revenue</div>
+    <div class="value">$52.9B</div>
+    <div class="delta down">-33% from $79B peak (2021)</div>
+  </div>
+  <div class="kpi">
+    <div class="label">Q4 2025 Revenue</div>
+    <div class="value">$13.7B</div>
+    <div class="delta down">-4% YoY, beat $13.4B est.</div>
+  </div>
+  <div class="kpi">
+    <div class="label">Non-GAAP Gross Margin</div>
+    <div class="value">37.9%</div>
+    <div class="delta up">+140bps above guidance</div>
+  </div>
+  <div class="kpi">
+    <div class="label">FY2025 FCF</div>
+    <div class="value">-$4.95B</div>
+    <div class="delta up">Improved from -$15.7B in FY24</div>
+  </div>
+  <div class="kpi">
+    <div class="label">Q4 FCF</div>
+    <div class="value">+$800M</div>
+    <div class="delta up">First positive FCF in years</div>
+  </div>
+  <div class="kpi">
+    <div class="label">Market Cap</div>
+    <div class="value">~$233B</div>
+    <div class="delta neutral">P/B ~1.5x</div>
+  </div>
+  <div class="kpi">
+    <div class="label">Net Debt</div>
+    <div class="value">~$9.2B</div>
+    <div class="delta neutral">Cash $37.4B vs Debt $46.6B</div>
+  </div>
+  <div class="kpi">
+    <div class="label">18A Yields</div>
+    <div class="value">~55%</div>
+    <div class="delta neutral">vs TSMC 70%+ at 2nm</div>
+  </div>
+</div>
+
+<!-- THE TURNAROUND CASE -->
+<section>
+  <h2>The Turnaround Case</h2>
+  <p class="section-intro">Three interlocking narratives — management credibility, operational restructuring, and foundry inflection — must all succeed simultaneously. History says most industrial turnarounds fail. The question is whether Intel is the exception.</p>
+
+  <div class="cards">
+    <div class="card">
+      <h3>New CEO: Lip-Bu Tan <span class="tag pivot">Management Reset</span></h3>
+      <ul>
+        <li>Former CEO of Cadence Design Systems; deep EDA/semiconductor ecosystem credibility</li>
+        <li>Appointed March 18, 2025 after Pat Gelsinger's forced exit (December 2024)</li>
+        <li>Strategy: "Engineering-first, demand-before-investment" — explicit reversal of Gelsinger's build-it-and-they-will-come approach</li>
+        <li>Explicitly called prior CapEx "unwise and excessive" — sets accountability benchmark</li>
+        <li>Flattening organizational layers, divesting non-core assets, reducing headcount to ~75K</li>
+        <li><strong>Risk:</strong> No track record running a manufacturing-intensive IDM; foundry business is operationally unlike EDA</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Operational Restructuring <span class="tag positive">Executing</span></h3>
+      <ul>
+        <li>$10B cost reduction plan (announced Aug 2024) — tracking to plan</li>
+        <li>Headcount: ~131K peak (2022) &rarr; ~75K target end-2025 (~43% reduction)</li>
+        <li>Cumulative headcount cuts: 15K (2023) + 17.5K (2024) + 21K (2025) = ~53.5K total</li>
+        <li>OpEx targets: $17B (2025) &rarr; $16B (2026)</li>
+        <li>CapEx reduced 20%+; additional $2B cuts in 2025</li>
+        <li>Germany/Poland fabs cancelled; Ohio delayed to 2030-2031 from 2025-2026</li>
+        <li>FCF trajectory improving: -$15.7B (FY24) &rarr; -$4.95B (FY25) &rarr; Q4 2025 first positive quarter</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>18A Node Progress <span class="tag binary">Binary Outcome</span></h3>
+      <ul>
+        <li>18A entered HVM in October 2025 — on schedule milestone</li>
+        <li>Panther Lake CPUs (next-gen PC chip) in production on 18A</li>
+        <li>Yields: ~55% mid-2025, improving ~7%/month, target "commercially viable" by end 2026</li>
+        <li>TSMC 2nm comparison: 70%+ yields — 15-point gap remains</li>
+        <li>NVIDIA made $5B equity investment at $23.28/share (Sep 2025) — signal of foundry interest, not commitment</li>
+        <li><strong>Critical gap:</strong> ZERO publicly committed external foundry customers as of early 2026</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Government Backstop <span class="tag high">Structural Support</span></h3>
+      <ul>
+        <li>CHIPS Act: $7.86B direct funding (milestone-based, not fully disbursed)</li>
+        <li>Secure Enclave: $3B defense contract — hardened strategic value</li>
+        <li>US Government taking ~9.9% equity stake (433M shares at $20.47)</li>
+        <li>National security angle: Only viable domestic advanced logic foundry</li>
+        <li>Geopolitical risk to TSMC Taiwan supply = Intel's strategic "insurance" argument</li>
+        <li><strong>Note:</strong> Government support does NOT guarantee commercial success — it guarantees Intel doesn't disappear</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Asset Monetization Pipeline <span class="tag cow">SOP Unlock</span></h3>
+      <ul>
+        <li>Altera (FPGA): 51% sold to Silver Lake for $4.46B (vs $16.7B acquisition price — massive write-down)</li>
+        <li>Mobileye: Intel retains ~80%; IPO'd 2022; full divestiture could generate $5-10B</li>
+        <li>Intel Capital portfolio: additional non-core assets available for monetization</li>
+        <li>Sum-of-parts: separating Products (CCG + DCAI) from Foundry could unlock hidden value</li>
+        <li>Products segment alone, if it were a fabless company, would likely trade at premium multiple</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>14A Node: Make-or-Break Decision <span class="tag warn">2027 Cliff</span></h3>
+      <ul>
+        <li>Risk production: 2027; volume production: 2028</li>
+        <li>Intel may CANCEL 14A if no anchor external customer is secured</li>
+        <li>Without 14A, Intel becomes a 1-node foundry — not commercially viable long-term</li>
+        <li>With 14A, Intel maintains the roadmap to parity with TSMC N2/A16 by late decade</li>
+        <li>Decision point: likely late 2026 / early 2027</li>
+        <li>This single decision determines whether the bear or bull scenario materializes</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- SEGMENT DECOMPOSITION -->
+<section>
+  <h2>Segment Decomposition (Q4 2025)</h2>
+  <p class="section-intro">Intel operates as three major segments with radically different financial profiles. CCG is the cash cow under pressure; DCAI is recovering; Intel Foundry is a massive loss center that is the entire pivot thesis.</p>
+
+  <h3 style="color:var(--heading); margin: 18px 0 10px; font-size: 0.95rem;">Q4 2025 Revenue by Segment</h3>
+  <div class="bar-chart">
+    <div class="bar-row">
+      <span class="bar-label">Client (CCG)</span>
+      <div class="bar-track"><div class="bar-fill ccg" style="width:60%">$8.2B — -6.6% YoY — Cash Cow</div></div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">Data Center (DCAI)</span>
+      <div class="bar-track"><div class="bar-fill dcai" style="width:34%">$4.7B — +8.9% YoY — Recovering</div></div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">Intel Foundry</span>
+      <div class="bar-track"><div class="bar-fill foundry" style="width:33%">$4.5B — +3.8% YoY — Massive Losses</div></div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">Other (Mobileye etc.)</span>
+      <div class="bar-track"><div class="bar-fill other" style="width:5%">Misc</div></div>
+    </div>
+  </div>
+
+  <table style="margin-top:20px;">
+    <thead>
+      <tr><th>Segment</th><th>Q4 2025 Rev</th><th>YoY Growth</th><th>Operating Margin</th><th>Trajectory</th><th>Thesis Role</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Client Computing (CCG)</strong></td>
+        <td>$8.2B</td>
+        <td style="color:var(--red)">-6.6%</td>
+        <td style="color:var(--green)">~30%+ (profitable)</td>
+        <td style="color:var(--amber)">Structural decline vs AMD/ARM</td>
+        <td><span class="tag cow">Cash Cow</span></td>
+      </tr>
+      <tr>
+        <td><strong>Data Center &amp; AI (DCAI)</strong></td>
+        <td>$4.7B</td>
+        <td style="color:var(--green)">+8.9%</td>
+        <td style="color:var(--amber)">Recovering</td>
+        <td style="color:var(--amber)">AMD server share ~41% revenue</td>
+        <td><span class="tag growth">Recovery Play</span></td>
+      </tr>
+      <tr>
+        <td><strong>Intel Foundry</strong></td>
+        <td>$4.5B</td>
+        <td style="color:var(--green)">+3.8%</td>
+        <td style="color:var(--red)">-54.8% (Q3 2025); -71.7% prior</td>
+        <td style="color:var(--blue)">Improving; no external customers</td>
+        <td><span class="tag binary">Binary Bet</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="survival-banner" style="margin-top: 20px; margin-bottom: 0;">
+    <div class="icon">&#128200;</div>
+    <p><strong>Foundry financials:</strong> FY2024 Foundry operating loss was -$13B. Q3 2025 was -$2.3B (-54.8% margin), improved from -71.7%. At current pace, foundry losses may narrow to -$8-10B for FY2025. The pace of improvement is real, but the business is still in deep negative territory. Foundry target is break-even "midway between now and 2030," with 40% GM / 30% OM as the 2030 aspiration.</p>
+  </div>
+</section>
+
+<!-- COMPETITIVE POSITIONING -->
+<section>
+  <h2>Competitive Positioning</h2>
+  <p class="section-intro">Intel faces simultaneous competitive threats in every segment it operates. The CPU franchise faces AMD from above and ARM from below; the AI accelerator ambition faces NVIDIA; the foundry business must displace customer inertia anchored to TSMC.</p>
+
+  <h3 style="color:var(--heading); margin: 18px 0 10px; font-size: 0.95rem;">Server CPU Revenue Share — Intel vs. AMD</h3>
+  <div class="bar-chart">
+    <div class="bar-row">
+      <span class="bar-label">Intel (2019)</span>
+      <div class="bar-track"><div class="bar-fill intel-server" style="width:97%">~97% revenue share</div></div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">Intel (2025)</span>
+      <div class="bar-track"><div class="bar-fill intel-server" style="width:59%">~59% revenue share</div></div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">AMD (2025)</span>
+      <div class="bar-track"><div class="bar-fill amd-server" style="width:41%">~41% revenue share</div></div>
+    </div>
+  </div>
+  <p style="font-size:0.82rem; color:var(--muted); margin-top:4px; margin-bottom: 16px;">Intel still holds ~72% unit share but only ~59% revenue share — AMD's EPYC commands higher ASPs. Six years ago Intel held 97% revenue share. The trajectory is clear.</p>
+
+  <h3 style="color:var(--heading); margin: 18px 0 10px; font-size: 0.95rem;">AI Accelerator Revenue (2025 Estimate)</h3>
+  <div class="bar-chart">
+    <div class="bar-row">
+      <span class="bar-label">NVIDIA</span>
+      <div class="bar-track"><div class="bar-fill nvidia-ai" style="width:96%">~$215B — ~87% share</div></div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">AMD</span>
+      <div class="bar-track"><div class="bar-fill amd-ai" style="width:20%">~$4.5B — ~2% share</div></div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">Intel Gaudi 3</span>
+      <div class="bar-track"><div class="bar-fill intel-ai" style="width:2%">~$500M H2 2024</div></div>
+    </div>
+  </div>
+  <p style="font-size:0.82rem; color:var(--muted); margin-top:4px; margin-bottom: 16px;">Gaudi 3 revenue is de minimis — ~$500M vs NVIDIA's $215B. Intel has no competitive AI accelerator at rack scale. Unless a future generation (post-Gaudi) achieves competitive TCO, Intel will remain a rounding error in this market.</p>
+
+  <h3 style="color:var(--heading); margin: 18px 0 10px; font-size: 0.95rem;">18A vs. TSMC 2nm — Yield Comparison</h3>
+  <div class="bar-chart">
+    <div class="bar-row">
+      <span class="bar-label">TSMC 2nm</span>
+      <div class="bar-track"><div class="bar-fill tsmc-yield" style="width:73%">70%+ commercially viable yields</div></div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">Intel 18A</span>
+      <div class="bar-track"><div class="bar-fill intel-yield" style="width:55%">~55% mid-2025, +7%/month</div></div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">Samsung 2nm</span>
+      <div class="bar-track"><div class="bar-fill samsung-yield" style="width:58%">55-60% end 2025 (est.)</div></div>
+    </div>
+  </div>
+  <p style="font-size:0.82rem; color:var(--muted); margin-top:4px;">Intel needs to close this 15-point yield gap to be commercially viable. At +7%/month improvement, Intel would reach 70% by late 2025 / early 2026 — but TSMC's target keeps moving (N2P, A16 already in development).</p>
+
+  <div class="cards" style="margin-top: 24px;">
+    <div class="card">
+      <h3>ARM Threat to x86 <span class="tag risk">Structural Risk</span></h3>
+      <ul>
+        <li>Apple M-series proved ARM can dominate high-performance PC workloads</li>
+        <li>Microsoft Copilot+ PCs running Snapdragon X Elite (ARM) — Windows ARM support maturing</li>
+        <li>Qualcomm targeting PC market with 40-80% battery advantage claims</li>
+        <li>If ARM reaches 15-20% Windows PC share by 2028, Intel's CCG addressable market contracts structurally</li>
+        <li><strong>Intel counter:</strong> x86 has massive software compatibility moat; enterprise transition is 5-10 year process</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>AMD Competitive Dynamics <span class="tag risk">Ongoing Erosion</span></h3>
+      <ul>
+        <li>AMD EPYC Genoa/Turin: performance-per-dollar advantage over Xeon in cloud deployments</li>
+        <li>Hyperscalers (AWS, Azure, Google) increasingly deploying AMD servers to reduce Intel dependency</li>
+        <li>Intel Granite Rapids (Q4 2024): competitive response but AMD maintains architecture lead</li>
+        <li>AMD Zen 5 on TSMC 3nm vs Intel on own 18A process — technology gap risk</li>
+        <li>At 41% revenue share, AMD is at an inflection — further share gains are possible</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Foundry Customer Problem <span class="tag warn">Critical Gap</span></h3>
+      <ul>
+        <li>Zero publicly announced external foundry customers as of Q1 2026</li>
+        <li>Historical customer relationships: primarily internal (AMD, Apple, NVIDIA all use TSMC)</li>
+        <li>PDK ecosystem: Intel's process design kits are less mature than TSMC's 30-year library</li>
+        <li>Trust issue: fabless customers historically reluctant to use a foundry that also competes with them in products</li>
+        <li>NVIDIA $5B equity stake: meaningful signal but not a wafer supply commitment</li>
+        <li>Qualcomm reportedly evaluating 18A — no public announcement yet</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- TURNAROUND SCORECARD -->
+<section>
+  <h2>Turnaround Scorecard</h2>
+  <p class="section-intro">Objective assessment of the four critical dimensions for any industrial turnaround: management quality, balance sheet runway, operational execution, and competitive positioning. Graded on a A-D scale with supporting rationale.</p>
+
+  <div class="scorecard-grid">
+    <div class="scorecard-item">
+      <div class="sc-title">Dimension 1</div>
+      <div class="sc-grade b">B</div>
+      <div class="sc-label">Management Quality & Credibility</div>
+      <div class="sc-bar"><div class="sc-fill" style="width:70%; background: linear-gradient(90deg, #3b82f6, #1d4ed8);"></div></div>
+      <p>Lip-Bu Tan is a genuine upgrade — respected, decisive, credible in the semiconductor ecosystem. But he inherited a mess and has been CEO for under 12 months. Early signals (org flattening, CapEx discipline, "demand-before-investment" mantra) are right directionally. Prior management failures (Pat Gelsinger's build-it approach cost Intel 3+ years) warrant skepticism until Tan shows he can win an external customer. Grade rises to A- upon first external foundry win.</p>
+    </div>
+    <div class="scorecard-item">
+      <div class="sc-title">Dimension 2</div>
+      <div class="sc-grade b">B+</div>
+      <div class="sc-label">Balance Sheet Runway</div>
+      <div class="sc-bar"><div class="sc-fill" style="width:75%; background: linear-gradient(90deg, #3b82f6, #1d4ed8);"></div></div>
+      <p>Cash &amp; investments of $37.4B, CHIPS Act funding ($7.86B milestone-based), and $3B Secure Enclave contract provide 3-4 year liquidity runway even with continued FCF losses. Net debt of ~$9.2B (using full liquidity) is manageable. The dividend suspension ($0.5B/quarter saved), Altera sale ($4.46B), and potential Mobileye divestiture ($5-10B) all extend runway further. Not a liquidity crisis — a profitability crisis.</p>
+    </div>
+    <div class="scorecard-item">
+      <div class="sc-title">Dimension 3</div>
+      <div class="sc-grade c">C+</div>
+      <div class="sc-label">Operational Execution</div>
+      <div class="sc-bar"><div class="sc-fill" style="width:55%; background: linear-gradient(90deg, #f59e0b, #d97706);"></div></div>
+      <p>Restructuring is executing well — FCF improved $10.7B YoY, Q4 2025 first positive FCF quarter, headcount reduction ahead of plan. But the product side is missing: Intel has no competitive AI accelerator, no external foundry customer, and its CCG segment declined -6.6% YoY. Operational progress in cost-cutting is real; operational progress in winning new business is not yet visible. Grade improves to B upon Gaudi revenue inflection or first external foundry win.</p>
+    </div>
+    <div class="scorecard-item">
+      <div class="sc-title">Dimension 4</div>
+      <div class="sc-grade d">D+</div>
+      <div class="sc-label">Competitive Positioning</div>
+      <div class="sc-bar"><div class="sc-fill" style="width:30%; background: linear-gradient(90deg, #ef4444, #991b1b);"></div></div>
+      <p>This is the hardest category: Intel is fighting on three fronts simultaneously (CPU vs AMD/ARM, AI accelerator vs NVIDIA/AMD, foundry vs TSMC) and winning none of them outright. Server share fell from 97% to 59% revenue over 6 years. Gaudi is irrelevant in AI. Foundry has no external customers. The 18A node is technically promising but commercially unproven. Grade improves to C upon external customer win and yield parity confirmation at 18A.</p>
+    </div>
+    <div class="scorecard-item">
+      <div class="sc-title">Dimension 5</div>
+      <div class="sc-grade c">C</div>
+      <div class="sc-label">Technology Roadmap</div>
+      <div class="sc-bar"><div class="sc-fill" style="width:50%; background: linear-gradient(90deg, #f59e0b, #d97706);"></div></div>
+      <p>18A entered HVM on schedule — a significant milestone after years of delays. 14A roadmap exists (risk production 2027, volume 2028) but is contingent on securing an anchor customer. PowerVia (backside power delivery) is genuinely differentiated. But a 15-point yield gap vs TSMC remains, and Intel's process design kit ecosystem lags TSMC's by years. Promise exists, but execution track record (10nm delayed 5+ years) demands healthy skepticism.</p>
+    </div>
+    <div class="scorecard-item">
+      <div class="sc-title">Dimension 6</div>
+      <div class="sc-grade b">B-</div>
+      <div class="sc-label">Sum-of-Parts Value</div>
+      <div class="sc-bar"><div class="sc-fill" style="width:65%; background: linear-gradient(90deg, #3b82f6, #1d4ed8);"></div></div>
+      <p>Intel's products business (CCG + DCAI) generates ~$45B+ in annual revenue with healthy margins in CCG. Separated from foundry losses, the Products segment could justify $25-35/share on its own. Foundry, if successful, adds $15-40/share. The problem: Intel can't easily separate them — the Products business relies on internal Foundry manufacturing. The NVIDIA equity stake at $23.28/share vs current ~$45 is already 2x return for them, suggesting external validation of intrinsic value above recent lows.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SUM-OF-PARTS ANALYSIS -->
+<section>
+  <h2>Sum-of-Parts Analysis</h2>
+  <p class="section-intro">Intel's bull case is a sum-of-parts story. Separating the Products business (high-quality fabless-equivalent) from the Foundry (venture-stage bet) reveals potentially significant hidden value — but also makes the bear case more legible.</p>
+
+  <div class="sop-table">
+    <table>
+      <thead>
+        <tr>
+          <th>Business Segment</th>
+          <th>Bear Value</th>
+          <th>Base Value</th>
+          <th>Bull Value</th>
+          <th>Methodology</th>
+          <th>Key Assumptions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>CCG (Client CPU)</strong></td>
+          <td style="color:var(--red)">$8/share</td>
+          <td style="color:var(--blue)">$14/share</td>
+          <td style="color:var(--green)">$18/share</td>
+          <td>6-12x normalized EBIT</td>
+          <td>Rev $28-32B; margin 25-30%; ARM share risk modeled</td>
+        </tr>
+        <tr>
+          <td><strong>DCAI (Data Center/AI)</strong></td>
+          <td style="color:var(--red)">$5/share</td>
+          <td style="color:var(--blue)">$9/share</td>
+          <td style="color:var(--green)">$15/share</td>
+          <td>8-15x normalized EBIT</td>
+          <td>Rev $18-22B; AMD erosion assumed; Gaudi de-minimis</td>
+        </tr>
+        <tr>
+          <td><strong>Intel Foundry</strong></td>
+          <td style="color:var(--red)">-$5/share</td>
+          <td style="color:var(--blue)">$8/share</td>
+          <td style="color:var(--green)">$32/share</td>
+          <td>EV/Sales 0.3-1.5x; option value model</td>
+          <td>Bear: stranded assets; Bull: external wins, 2030 break-even</td>
+        </tr>
+        <tr>
+          <td><strong>Mobileye (~80% stake)</strong></td>
+          <td style="color:var(--red)">$2/share</td>
+          <td style="color:var(--blue)">$5/share</td>
+          <td style="color:var(--green)">$8/share</td>
+          <td>Mobileye market cap × 80%</td>
+          <td>ADAS/AV market; competitive pressure from in-house solutions</td>
+        </tr>
+        <tr>
+          <td><strong>Altera (49% retained)</strong></td>
+          <td style="color:var(--red)">$1/share</td>
+          <td style="color:var(--blue)">$2/share</td>
+          <td style="color:var(--green)">$3/share</td>
+          <td>Market comp: Silver Lake paid $4.46B for 51%</td>
+          <td>Intel's 49% stake at same implied valuation</td>
+        </tr>
+        <tr>
+          <td><strong>Net Cash / (Debt)</strong></td>
+          <td style="color:var(--amber)">-$2/share</td>
+          <td style="color:var(--blue)">-$2/share</td>
+          <td style="color:var(--green)">-$2/share</td>
+          <td>Cash $37.4B minus Debt $46.6B minus liquidity haircut</td>
+          <td>CHIPS Act funding ($7.86B) partially offsets</td>
+        </tr>
+        <tr class="sop-total">
+          <td><strong>SOP Total</strong></td>
+          <td style="color:var(--red); font-size: 1.1rem;"><strong>$9/share</strong></td>
+          <td style="color:var(--blue); font-size: 1.1rem;"><strong>$36/share</strong></td>
+          <td style="color:var(--green); font-size: 1.1rem;"><strong>$74/share</strong></td>
+          <td></td>
+          <td>~5B diluted shares outstanding</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size: 0.82rem; color: var(--muted); margin-top: 10px;">Note: The bear SOP ($9/share) is below current trading price (~$45-48), indicating the market is currently pricing in somewhere between the base and bull scenario for foundry. The NVIDIA equity stake at $23.28 implies they saw ~2x upside from the 2024 lows, providing external validation of intrinsic value above the trough. However, no external endorsement substitutes for actual foundry customer commitments.</p>
+</section>
+
+<!-- HISTORICAL DECLINE CONTEXT -->
+<section>
+  <h2>How Intel Got Here: A Decade of Strategic Failure</h2>
+  <p class="section-intro">Understanding the depth of Intel's decline is essential to calibrating the turnaround probability. This is not a cyclical downturn — it is a structural erosion resulting from years of compounded strategic missteps.</p>
+
+  <div class="timeline">
+    <div class="tl-item negative">
+      <div class="tl-date">2013–2016</div>
+      <div class="tl-event">Mobile Market Miss — the Original Sin</div>
+      <div class="tl-desc">Intel had multiple opportunities to supply smartphone chips but ceded the mobile market entirely to ARM-based designs. Every iPhone since iPhone 1 has used ARM. The mobile GPU/NPU revolution that followed was built entirely without Intel.</div>
+    </div>
+    <div class="tl-item negative">
+      <div class="tl-date">2016–2020</div>
+      <div class="tl-event">10nm Delays — 5+ Year Competitive Gap Opens</div>
+      <div class="tl-desc">Intel's 10nm process was supposed to launch in 2015-2016. It slipped repeatedly until 2019-2020. During this period, TSMC shipped 7nm (2018), 5nm (2020), and began 3nm. AMD switched to TSMC and launched EPYC, beginning Intel's server market share erosion. This single failure set back Intel's competitive position by a full technology generation.</div>
+    </div>
+    <div class="tl-item negative">
+      <div class="tl-date">2019–2021</div>
+      <div class="tl-event">AI/GPU Revolution — Missed Entirely</div>
+      <div class="tl-desc">NVIDIA's CUDA ecosystem and GPU-accelerated deep learning rose to dominance while Intel's Nervana and Habana (Gaudi) acquisitions yielded minimal results. Intel sold its DRAM-based AI memory business, exited the networking switch ASIC market, and watched NVIDIA grow from ~$10B to $200B+ in revenue in the AI era. Gaudi 3 in 2024 is a footnote next to Blackwell.</div>
+    </div>
+    <div class="tl-item negative">
+      <div class="tl-date">2015–2022</div>
+      <div class="tl-event">Overpriced Acquisitions — Capital Destruction</div>
+      <div class="tl-desc">Mobileye at $15.3B (2017) — IPO'd below acquisition price in 2022, value has since declined. Altera at $16.7B (2015) — sold 51% to Silver Lake for $4.46B (implied total value ~$8.7B, a $8B loss). These acquisitions consumed ~$32B in capital and generated substantially negative returns.</div>
+    </div>
+    <div class="tl-item negative">
+      <div class="tl-date">2021–2024</div>
+      <div class="tl-event">Pat Gelsinger's IDM 2.0 — Right Vision, Wrong Execution</div>
+      <div class="tl-desc">Gelsinger's foundry strategy was directionally correct — Intel needed to transform. But the "build-it-and-they-will-come" CapEx approach was unanchored from customer demand. Intel committed to fabs in Germany, Poland, and Ohio before securing a single external customer. CapEx peaked at $25B/yr while Intel had no external revenue to show for it. FY2024 Foundry operating loss: -$13B.</div>
+    </div>
+    <div class="tl-item positive">
+      <div class="tl-date">Late 2024 – Present</div>
+      <div class="tl-event">Lip-Bu Tan Appointed — The Reset Begins</div>
+      <div class="tl-desc">Gelsinger forced out December 2024. Tan appointed March 2025. Immediate actions: Germany/Poland fabs cancelled, Ohio delayed 5 years, headcount cut 40%+, CapEx reduced $5B+. FY2025 FCF improved $10.7B YoY. 18A hit HVM in October 2025. First positive FCF quarter in Q4 2025. Early signals are right — but the rebuild from this depth will take years.</div>
+    </div>
+    <div class="tl-item pending">
+      <div class="tl-date">2026–2028</div>
+      <div class="tl-event">The Critical Window — Customer Win or Stranded Assets</div>
+      <div class="tl-desc">18A yields must reach commercial viability (70%+). At least one major external customer must commit wafer supply agreements. 14A decision must be made. AMD server share must be stabilized. Gaudi successor must show competitive cost/performance for AI inference. This 2-3 year window determines whether Intel re-emerges as a two-legged competitor (Products + Foundry) or retreats to a premium-priced products-only business.</div>
+    </div>
+  </div>
+</section>
+
+<!-- Q1 2026 GUIDANCE & FORWARD MODEL -->
+<section>
+  <h2>Q1 2026 Guidance &amp; Forward Revenue Model</h2>
+  <p class="section-intro">Q1 2026 guidance reflects continued transition pain — near-zero EPS and revenue seasonality. The forward model separates Products (CCG + DCAI) from Foundry to isolate the core thesis.</p>
+
+  <div class="cards" style="margin-bottom: 20px;">
+    <div class="card">
+      <h3>Q1 2026 Guidance</h3>
+      <ul>
+        <li><strong>Revenue:</strong> $11.7B–$12.7B (midpoint $12.2B)</li>
+        <li><strong>Non-GAAP EPS:</strong> ~$0.00 — near breakeven</li>
+        <li><strong>GAAP EPS:</strong> ~-$0.21 — restructuring charges continue</li>
+        <li>Sequential revenue decline from Q4 2025's $13.7B — typical Q1 seasonality</li>
+        <li>Gross margin guidance not explicitly provided; watch for foundry mix shift</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Key Inflection Metrics to Watch</h3>
+      <ul>
+        <li><strong>18A external customer announcement</strong> — THE binary event</li>
+        <li>Foundry operating loss trajectory: Q3 -$2.3B, target -$1.5B/Q by end 2026</li>
+        <li>CCG revenue stabilization: halting the -6-7% YoY decline is critical</li>
+        <li>DCAI momentum: +8.9% YoY in Q4 2025, need to sustain/accelerate</li>
+        <li>FCF sustainability: Q4 2025 +$800M must not revert to negative</li>
+        <li>OpEx: $17B → $16B target; any slippage signals execution risk</li>
+      </ul>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr><th></th><th>FY2024A</th><th>FY2025A</th><th>FY2026E</th><th>FY2027E</th><th>FY2028E</th></tr>
+    </thead>
+    <tbody>
+      <tr style="font-weight:600; color:var(--green);">
+        <td>Bull Case Revenue ($B)</td><td>$53.1B</td><td>$52.9B</td><td>$54B</td><td>$60B</td><td>$68B</td>
+      </tr>
+      <tr><td style="color:var(--muted); padding-left:24px;">YoY Growth</td><td>-2%</td><td>-0.4%</td><td>+2%</td><td>+11%</td><td>+13%</td></tr>
+      <tr><td style="color:var(--muted); padding-left:24px;">Assumption</td><td></td><td></td><td>External foundry customer wins; 18A yields hit 70%</td><td>Foundry ramp; 14A confirmed; DCAI recovery</td><td>Foundry approaching break-even</td></tr>
+      <tr style="font-weight:600; color:var(--blue);">
+        <td>Base Case Revenue ($B)</td><td>$53.1B</td><td>$52.9B</td><td>$51B</td><td>$53B</td><td>$57B</td>
+      </tr>
+      <tr><td style="color:var(--muted); padding-left:24px;">YoY Growth</td><td>-2%</td><td>-0.4%</td><td>-4%</td><td>+4%</td><td>+8%</td></tr>
+      <tr><td style="color:var(--muted); padding-left:24px;">Assumption</td><td></td><td></td><td>Incremental foundry progress; CCG/DCAI flat to down</td><td>No transformative wins; cost cuts drive margin</td><td>Products-led recovery; foundry as option</td></tr>
+      <tr style="font-weight:600; color:var(--red);">
+        <td>Bear Case Revenue ($B)</td><td>$53.1B</td><td>$52.9B</td><td>$48B</td><td>$44B</td><td>$41B</td>
+      </tr>
+      <tr><td style="color:var(--muted); padding-left:24px;">YoY Growth</td><td>-2%</td><td>-0.4%</td><td>-9%</td><td>-8%</td><td>-7%</td></tr>
+      <tr><td style="color:var(--muted); padding-left:24px;">Assumption</td><td></td><td></td><td>No foundry customer; 14A cancelled; AMD share gains accelerate</td><td>ARM expands in PC; DCAI loses more share</td><td>Products-only with shrinking TAM</td></tr>
+    </tbody>
+  </table>
+
+  <h3 style="color:var(--heading); margin: 24px 0 10px; font-size: 0.95rem;">Foundry Operating Loss Trajectory</h3>
+  <table>
+    <thead>
+      <tr><th>Period</th><th>Foundry Op. Loss</th><th>Foundry Op. Margin</th><th>Key Event</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>FY2024</td><td style="color:var(--red)">-$13.0B</td><td style="color:var(--red)">-71.7% (Q3)</td><td>Peak loss; Gelsinger-era CapEx</td></tr>
+      <tr><td>Q3 2025</td><td style="color:var(--red)">-$2.3B (quarterly)</td><td style="color:var(--red)">-54.8%</td><td>Improving — cost cuts, CapEx reduction</td></tr>
+      <tr><td>FY2025E</td><td style="color:var(--amber)">~-$8-9B</td><td style="color:var(--amber)">~-50%</td><td>18A HVM entry; restructuring impact</td></tr>
+      <tr><td>FY2026E (Base)</td><td style="color:var(--amber)">~-$5-6B</td><td style="color:var(--amber)">~-35%</td><td>Yields improving; still no external revenue</td></tr>
+      <tr><td>FY2028E (Bull)</td><td style="color:var(--blue)">~-$2B</td><td style="color:var(--blue)">~-10%</td><td>External customers; 14A ramp beginning</td></tr>
+      <tr><td>FY2030 Target</td><td style="color:var(--green)">Break-even</td><td style="color:var(--green)">40% GM, 30% OM</td><td>Management aspiration; requires major customer wins</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- VALUATION SCENARIOS -->
+<section>
+  <h2>Valuation &amp; Scenario Analysis (FY2028)</h2>
+  <p class="section-intro">Because this is a binary turnaround, we present three distinct scenarios with explicit probability weights rather than a single fair value. The expected value calculation is included but should not be mistaken for a point estimate.</p>
+
+  <div class="scenario-grid">
+    <div class="scenario">
+      <h4 style="color:var(--green);">Bull Case</h4>
+      <div class="price bull">$75</div>
+      <p style="font-size:0.82rem; color:var(--muted);">FY2028 target; 25% probability</p>
+      <div class="prob bull">25% weighted</div>
+      <ul class="detail">
+        <li>External customer win (18A or 14A) announced 2026</li>
+        <li>18A/14A yields reach parity with TSMC</li>
+        <li>CCG stabilizes; DCAI recovers to $22B+</li>
+        <li>Foundry losses narrow to -$2B/yr by 2028</li>
+        <li>2x book value (~$46/share book)</li>
+        <li>Products at 16x NE + foundry option value</li>
+      </ul>
+    </div>
+    <div class="scenario">
+      <h4 style="color:var(--blue);">Base Case</h4>
+      <div class="price base">$45</div>
+      <p style="font-size:0.82rem; color:var(--muted);">FY2028 target; 45% probability</p>
+      <div class="prob base">45% weighted</div>
+      <ul class="detail">
+        <li>Incremental foundry progress; no transformative win</li>
+        <li>CCG share loss continues at moderate pace</li>
+        <li>Products valued at 12-14x normalized earnings</li>
+        <li>Foundry as a low-probability option (~$5-8/sh)</li>
+        <li>Near current trading range — modest return</li>
+        <li>Cost cuts and FCF inflection drive modest re-rate</li>
+      </ul>
+    </div>
+    <div class="scenario">
+      <h4 style="color:var(--red);">Bear Case</h4>
+      <div class="price bear">$20</div>
+      <p style="font-size:0.82rem; color:var(--muted);">FY2028 target; 30% probability</p>
+      <div class="prob bear">30% weighted</div>
+      <ul class="detail">
+        <li>No external foundry customer by late 2026</li>
+        <li>14A cancelled; $30B+ stranded assets impaired</li>
+        <li>AMD server revenue crosses 50%+</li>
+        <li>Products-only at 8-10x depressed earnings</li>
+        <li>~50-60% downside from current price</li>
+        <li>ARM/Qualcomm PC share compounds CCG decline</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top: 20px; border-color: var(--accent2);">
+    <h3>Expected Value Calculation</h3>
+    <p style="font-size: 0.9rem; margin-top: 8px;">Probability-weighted EV: (25% × $75) + (45% × $45) + (30% × $20) = <strong style="color:var(--blue);">$44.00</strong></p>
+    <p style="font-size: 0.85rem; color: var(--muted); margin-top: 8px;">At current prices of $44-48, the stock is approximately fairly valued on an expected value basis. This means Intel is NOT a compelling buy at current levels on a risk-adjusted basis — it is a binary option. The bull case offers ~65% upside; the bear case offers ~55% downside. Position sizing should reflect the speculative nature: this is not a high-conviction compounder but a binary turnaround bet where the magnitude of being right equals the magnitude of being wrong.</p>
+    <p style="font-size: 0.85rem; color: var(--amber); margin-top: 8px;"><strong>Asymmetry note:</strong> If you have a directional view on the probability of an external foundry customer win, the expected value moves dramatically. Adjusting the bull probability from 25% to 35% raises EV to $49. Adjusting it to 15% drops EV to $39. The customer win probability IS the thesis.</p>
+  </div>
+
+  <h3 style="color:var(--heading); margin: 28px 0 10px; font-size: 0.95rem;">Sensitivity Matrix — Per-Share Value ($) — Products Business Only</h3>
+  <div class="val-matrix">
+    <table>
+      <thead>
+        <tr><th>Normalized Earnings (2028) / P/E Multiple →</th><th>8x</th><th>10x</th><th>12x</th><th>14x</th><th>16x</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>$1.50/sh (Bear)</strong></td><td style="color:var(--red);">$12</td><td>$15</td><td>$18</td><td>$21</td><td>$24</td></tr>
+        <tr><td><strong>$2.50/sh (Base)</strong></td><td>$20</td><td>$25</td><td class="highlight">$30</td><td>$35</td><td>$40</td></tr>
+        <tr><td><strong>$3.50/sh (Bull)</strong></td><td>$28</td><td>$35</td><td>$42</td><td class="highlight">$49</td><td style="color:var(--green);">$56</td></tr>
+        <tr><td><strong>$4.50/sh (Super Bull)</strong></td><td>$36</td><td>$45</td><td>$54</td><td>$63</td><td style="color:var(--green);">$72</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size: 0.82rem; color: var(--muted); margin-top: 8px;">This matrix shows Products-only valuation, before adding foundry option value. The bull case ($75 target) requires Products at ~$40-43/share PLUS foundry at ~$32/share — a high bar. The base case ~$45 is achievable even if foundry remains a loss center, via Products at ~$35-40/share.</p>
+</section>
+
+<!-- CATALYSTS & KILL SCENARIOS -->
+<section>
+  <h2>Key Catalysts</h2>
+  <p class="section-intro">Unlike TSMC (a compounding compounder where you simply wait), Intel requires specific binary catalysts to move toward the bull case. Monitor these events actively.</p>
+
+  <div class="cards">
+    <div class="card" style="border-color: rgba(16,185,129,0.3);">
+      <h3>#1 — External Foundry Customer Win <span class="tag binary">THE Catalyst</span></h3>
+      <ul>
+        <li>A publicly announced wafer supply agreement with a major fabless customer</li>
+        <li>Qualifying customers: Qualcomm, MediaTek, Amazon (Trainium), Broadcom, or even a hyperscaler custom chip program</li>
+        <li>Even a letter of intent with a top-20 fabless company would be massively re-rating</li>
+        <li>Timeline: needs to happen by late 2026 to justify 14A investment decision</li>
+        <li>NVIDIA's $5B equity stake is a precursor signal — watch for wafer commitment announcement</li>
+        <li><strong>Stock impact if announced:</strong> +20-35% minimum; likely more</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>#2 — 18A Yields Reaching 70%+ <span class="tag positive">Prerequisite</span></h3>
+      <ul>
+        <li>Currently ~55% mid-2025, improving ~7%/month (per industry estimates)</li>
+        <li>Target: "commercially viable" by end 2026</li>
+        <li>70%+ yield is the threshold for external customers to take Intel seriously</li>
+        <li>Each confirmed yield milestone (60%, 65%, 70%) is a positive catalyst</li>
+        <li>Watch Panther Lake production yields as a real-world benchmark</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>#3 — NVIDIA Partnership Deepening <span class="tag high">Equity Signal</span></h3>
+      <ul>
+        <li>NVIDIA invested $5B in Intel equity at $23.28/share (September 2025)</li>
+        <li>Deepening = wafer supply agreement for Rubin or post-Blackwell generation</li>
+        <li>Even 5% of NVIDIA's wafer volume would be transformational for Intel Foundry</li>
+        <li>Jensen Huang's public endorsement of 18A would accelerate other customer conversations</li>
+        <li>Risk: NVIDIA's investment may be purely financial/strategic (supply chain hedge), not a foundry commitment</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>#4 — FCF Inflection to Sustained Positive <span class="tag positive">Financial Health</span></h3>
+      <ul>
+        <li>Q4 2025 first positive FCF quarter (+$800M) — needs to sustain and grow</li>
+        <li>OpEx declining: $17B (2025) target → $16B (2026) target</li>
+        <li>CapEx reduction: further $2B+ cuts in 2025; rightsize to demand</li>
+        <li>Dividend was suspended — $2B/yr saved; could be reinstated as signal of recovery</li>
+        <li>Sustained FCF positive would allow debt repayment and extend runway without dilution</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>#5 — Foundry Break-Even Acceleration <span class="tag high">Financial Milestone</span></h3>
+      <ul>
+        <li>Management guides break-even "midway between now and 2030" — mid-2027</li>
+        <li>Any acceleration of this timeline (or external customer win pulling it forward) is massively re-rating</li>
+        <li>Even reducing foundry operating loss below -$1B/quarter would restore market credibility</li>
+        <li>Watch Q-over-Q foundry operating loss trajectory as a leading indicator</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>#6 — Mobileye Full Divestiture <span class="tag cow">SOP Unlock</span></h3>
+      <ul>
+        <li>Intel retains ~80% of Mobileye; potential proceeds of $5-10B from full sale</li>
+        <li>Proceeds would materially reduce net debt ($46.6B total debt)</li>
+        <li>Simplifies Intel's story and removes automotive exposure mismatch</li>
+        <li>Signals management commitment to portfolio rationalization</li>
+        <li>Altera partial sale precedent: Silver Lake deal validates monetization approach</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- THESIS KILL SCENARIOS -->
+<section>
+  <h2>Thesis Kill Scenarios</h2>
+  <p class="section-intro">The specific, concrete events that would trigger the bear case. Unlike typical risks, these are scenarios with probabilities assigned — not generic disclaimers.</p>
+
+  <div class="gauge-row">
+    <div class="gauge-item">
+      <h4>1. No External Customer by Late 2026 — 14A Cancellation Risk</h4>
+      <div class="gauge-bar"><div class="gauge-fill crit" style="width:85%"></div></div>
+      <div class="gauge-meta"><span>Severity: Catastrophic</span><span>Prob (2yr): 25-30%</span></div>
+      <p style="font-size:0.8rem; color:var(--muted); margin-top:6px;">Without an external customer, Intel's 14A investment cannot be economically justified. Cancellation would trigger ~$30B+ in stranded asset impairments (Germany/Poland land/equipment, Arizona Phase 2, Ohio deposits). CEO Tan has explicitly set "demand-before-investment" as the standard — 14A cancellation is now a live risk, not a hypothetical. This single event is the most important thing to monitor.</p>
+    </div>
+    <div class="gauge-item">
+      <h4>2. AMD Server Revenue Share Crosses 50%+</h4>
+      <div class="gauge-bar"><div class="gauge-fill hi" style="width:65%"></div></div>
+      <div class="gauge-meta"><span>Severity: High</span><span>Prob (3yr): 30-35%</span></div>
+      <p style="font-size:0.8rem; color:var(--muted); margin-top:6px;">AMD went from de minimis to 41% revenue share in 6 years. At 50% share, AMD crosses a psychological and procurement threshold — hyperscalers normalize on AMD and Intel becomes the challenger. At 60%+ share, Intel's DCAI cash flows deteriorate enough to threaten the cross-subsidy funding the foundry build. Server share is the foundry's silent balance sheet.</p>
+    </div>
+    <div class="gauge-item">
+      <h4>3. TSMC Yield Gap Widens at N2 / A16</h4>
+      <div class="gauge-bar"><div class="gauge-fill hi" style="width:60%"></div></div>
+      <div class="gauge-meta"><span>Severity: High</span><span>Prob (3yr): 20-25%</span></div>
+      <p style="font-size:0.8rem; color:var(--muted); margin-top:6px;">If TSMC's A16 (2026) and N2P (2026) hit 75%+ yields while Intel 18A remains at 60-65%, the yield gap could widen rather than close. For external customers evaluating foundry partners, a persistent yield gap means Intel is structurally less competitive. The window for Intel to attract customers is 2025-2027 — if the gap isn't closed, the window closes permanently.</p>
+    </div>
+    <div class="gauge-item">
+      <h4>4. Cash Burn Accelerates — Forced Dilution or Government Bailout</h4>
+      <div class="gauge-bar"><div class="gauge-fill med" style="width:45%"></div></div>
+      <div class="gauge-meta"><span>Severity: Moderate-High</span><span>Prob (3yr): 15-20%</span></div>
+      <p style="font-size:0.8rem; color:var(--muted); margin-top:6px;">If FCF reverts to -$10B+ territory (e.g., yield disasters, cost overruns, revenue miss), Intel would need to raise equity capital or lean further on CHIPS Act funds. CHIPS Act funding is milestone-based — it doesn't front-run cash needs. A dilutive equity raise at $25-35/share would significantly impair current shareholders. Government equity at $20.47 implies a floor, but "government support" is not the same as financial rescue.</p>
+    </div>
+    <div class="gauge-item">
+      <h4>5. ARM Displaces x86 in Windows PC Mainstream</h4>
+      <div class="gauge-bar"><div class="gauge-fill med" style="width:35%"></div></div>
+      <div class="gauge-meta"><span>Severity: Moderate</span><span>Prob (5yr): 20-25%</span></div>
+      <p style="font-size:0.8rem; color:var(--muted); margin-top:6px;">ARM reached ~30% of laptop NPU benchmarks in 2025. If Qualcomm's Snapdragon X series or Apple Silicon creates a mass-market ARM Windows ecosystem, Intel's CCG TAM structurally shrinks. Unlike the server market (where AMD wins within x86), an ARM displacement would be an architecture disruption — Intel has no ARM fallback. CCG contributes ~60% of revenue; structural decline here funds the entire foundry bet.</p>
+    </div>
+    <div class="gauge-item">
+      <h4>6. Foundry Technology Fails — 18A Yield Ceiling</h4>
+      <div class="gauge-bar"><div class="gauge-fill med" style="width:30%"></div></div>
+      <div class="gauge-meta"><span>Severity: Catastrophic</span><span>Prob (2yr): 10-15%</span></div>
+      <p style="font-size:0.8rem; color:var(--muted); margin-top:6px;">If 18A yields plateau below 65% and fail to reach commercial viability by end 2026, the entire foundry thesis collapses. No external customer will commit to a process node with structural yield deficiencies. Intel's manufacturing heritage has been repeatedly questioned (10nm delays, 7nm delays). If 18A proves the pattern continues rather than breaks, Lip-Bu Tan's strategy unravels. Low probability, but severity is existential for the foundry thesis.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOUNDRY ECONOMICS DEEP DIVE -->
+<section>
+  <h2>Foundry Economics: Why This Is So Hard</h2>
+  <p class="section-intro">Building a competitive external foundry from scratch is the hardest thing in the semiconductor industry. Understanding why gives context to both the opportunity and the risk.</p>
+
+  <div class="cards">
+    <div class="card">
+      <h3>The Economics of Foundry Scale</h3>
+      <ul>
+        <li>A leading-edge fab costs $20-25B+ to build — ONLY economical at high utilization</li>
+        <li>TSMC spreads R&amp;D cost across 500+ customers and millions of wafers</li>
+        <li>Intel must attract enough external volume to justify the fixed cost base</li>
+        <li>Current Intel Foundry revenue: ~$4.5B/quarter vs TSMC's ~$28B/quarter</li>
+        <li>To break even, Intel needs foundry revenue to roughly double from current levels</li>
+        <li>Without external customers, Intel is paying the same capex but getting half the revenue</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>The Trust Problem: Intel vs. Customers</h3>
+      <ul>
+        <li>Intel Products competes against most potential foundry customers (Qualcomm, AMD, NVIDIA)</li>
+        <li>TSMC's "pure-play" model means they never compete with customers — trust moat</li>
+        <li>Intel must structurally separate Products and Foundry to address this concern</li>
+        <li>Legal/structural firewalls have been announced but not fully implemented</li>
+        <li>Historical precedent: Samsung foundry lost customers (Qualcomm, Apple) due to same trust issue</li>
+        <li>Partial resolution: Cadence (Tan's former company) could help certify Intel's PDK ecosystem independence</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Process Design Kit (PDK) Ecosystem Lag</h3>
+      <ul>
+        <li>TSMC's PDK ecosystem took 30+ years to build — 1000+ certified IP vendors</li>
+        <li>Intel's 18A PDK is functional but lacks the breadth of TSMC's OIP (Open Innovation Platform)</li>
+        <li>Porting a complex chip design to a new foundry takes 12-24 months minimum</li>
+        <li>Customers face switching costs beyond just yield — entire EDA toolchain must be validated</li>
+        <li>Intel's partnership with Cadence (Tan's background) could accelerate PDK maturation</li>
+        <li>This is a 3-5 year problem to solve — not fixable by any single announcement</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>US Government as Anchor: Strategic but Not Commercial</h3>
+      <ul>
+        <li>$7.86B CHIPS Act + $3B Secure Enclave = $10.86B in direct government support</li>
+        <li>US government 9.9% equity stake at $20.47 creates floor and alignment</li>
+        <li>Secure Enclave (defense chips) provides captive internal revenue stream</li>
+        <li>Government mandate: Intel MUST survive as the only viable domestic advanced foundry</li>
+        <li><strong>But:</strong> government will not provide commercial chips for NVIDIA/AMD — Intel must win those commercially</li>
+        <li>CHIPS Act funding is milestone-based — if Intel misses yield targets, funding pauses</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- BEAR CASE REASSESSMENT -->
+<section>
+  <h2>Mandatory Bear-Case Reassessment</h2>
+  <p class="section-intro">A 30% probability bear case at $20/share must be taken seriously. Here is the most rigorous articulation of why this turnaround could fail.</p>
+
+  <div class="card" style="border-color: rgba(239,68,68,0.3);">
+    <h3 style="color: var(--red);">The Bear Case: Intel as a Declining Products Company</h3>
+    <p style="font-size: 0.9rem; margin-top: 8px; margin-bottom: 12px;">The bear case is not a disaster scenario — it's a reversion to a mid-tier semiconductor company without the foundry transformation. The arithmetic is simple and painful:</p>
+    <ul>
+      <li style="margin-bottom: 8px;"><strong>CCG under pressure:</strong> If AMD reaches 30% PC revenue share + Qualcomm ARM takes 15% Windows PC share, Intel's CCG drops from $32B to ~$22-24B revenue, with compressed margins as Intel cuts prices to defend share.</li>
+      <li style="margin-bottom: 8px;"><strong>DCAI deteriorating:</strong> AMD crossing 50% server revenue share reduces DCAI from $18-19B to $13-15B. At lower margins under pricing pressure, DCAI EBIT falls 40-50%.</li>
+      <li style="margin-bottom: 8px;"><strong>Foundry stranded assets:</strong> Without a customer, Intel cancels 14A. The $30B+ in fab construction costs (Germany land, Arizona Phase 2, Ohio deposits, equipment) must be impaired. This is a one-time non-cash charge but destroys book value from ~$46 to ~$25-30.</li>
+      <li style="margin-bottom: 8px;"><strong>Products-only earnings power:</strong> On a combined CCG + DCAI revenue of ~$37-40B with ~10-12% net margins, Intel earns ~$1.50-1.80/share. At 10-12x earnings (appropriate for a structurally declining business with no growth catalyst), this implies $15-22/share.</li>
+      <li style="margin-bottom: 8px;"><strong>Credit market concern:</strong> $46.6B in debt becomes more problematic without FCF generation. Moody's/S&amp;P could downgrade Intel further, raising refinancing costs and limiting financial flexibility.</li>
+    </ul>
+    <p style="font-size: 0.88rem; color: var(--amber); margin-top: 12px;"><strong>The bear case requires no single catastrophic event</strong> — just 3-4 years of Intel's existing trends continuing: AMD share gains, no foundry customers, and the realization that the rebuild is slower than hoped. This is the MOST LIKELY path to $20 — not a collapse, but a slow grind down as the turnaround loses credibility.</p>
+  </div>
+</section>
+
+<!-- SOURCES -->
+<div class="sources">
+  <h3>Sources &amp; References</h3>
+  <a href="https://www.intc.com/news-releases/news-release-details/intel-reports-fourth-quarter-and-full-year-2025-financial-results" target="_blank">Intel Q4 &amp; FY2025 Earnings Release — INTC Investor Relations</a>
+  <a href="https://www.intc.com/investor-relations" target="_blank">Intel Investor Relations — SEC Filings, Annual Reports, Guidance</a>
+  <a href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=INTC&type=10-K&dateb=&owner=include&count=10" target="_blank">Intel 10-K / 10-Q Filings — SEC EDGAR</a>
+  <a href="https://www.chips.gov/chips-act" target="_blank">CHIPS and Science Act — US Department of Commerce</a>
+  <a href="https://www.commerce.gov/news/press-releases/2024/03/biden-harris-administration-announces-preliminary-terms-intel" target="_blank">CHIPS Act $7.86B Preliminary Agreement — US Dept. of Commerce (2024)</a>
+  <a href="https://www.intc.com/news-releases/news-release-details/intel-foundry-reports-fourth-quarter-and-full-year-2025-financial" target="_blank">Intel Foundry Independent Financials — Q4 2025</a>
+  <a href="https://investors.intc.com/events-and-presentations" target="_blank">Intel Investor Day Presentations — Strategic Updates</a>
+  <a href="https://www.anandtech.com/show/21665/intel-18a-panther-lake-enters-high-volume-manufacturing" target="_blank">Intel 18A HVM Entry (Panther Lake) — AnandTech/Industry Coverage</a>
+  <a href="https://www.wsj.com/tech/intel-ceo-pat-gelsinger-retires-b8ead680" target="_blank">Pat Gelsinger Retirement — Wall Street Journal (Dec 2024)</a>
+  <a href="https://www.intc.com/news-releases/news-release-details/intel-appoints-lip-bu-tan-chief-executive-officer" target="_blank">Lip-Bu Tan CEO Appointment — Intel Press Release (Mar 2025)</a>
+  <a href="https://www.reuters.com/technology/nvidia-invest-500-million-intel-stock-2025-09-11/" target="_blank">NVIDIA $5B Investment in Intel — Reuters (Sep 2025)</a>
+  <a href="https://www.bloomberg.com/news/articles/2025-06-15/silver-lake-intel-altera-deal" target="_blank">Silver Lake / Altera Deal ($4.46B for 51%) — Bloomberg</a>
+  <a href="https://www.semianalysis.com/p/intel-foundry-18a-yield-analysis" target="_blank">Intel 18A Yield Analysis — SemiAnalysis</a>
+  <a href="https://www.trendforce.com/presscenter/news/20250801-11950.html" target="_blank">Server CPU Market Share Analysis (Intel vs AMD 2025) — TrendForce</a>
+  <a href="https://www.idc.com/getdoc.jsp?containerId=prUS50026022" target="_blank">x86 vs ARM PC Market Share Forecast — IDC</a>
+  <a href="https://www.reuters.com/technology/intel-cuts-21000-jobs-2025-restructuring-plan-2025-01-15/" target="_blank">Intel 2025 Headcount Reduction (21K) — Reuters</a>
+</div>
+
+<div class="footer">
+  <p>This report was generated for informational and research purposes only. It does not constitute investment advice or a solicitation to buy or sell securities. All data reflects publicly available information as of April 2, 2026. Past performance is not indicative of future results. Speculative securities involve substantial risk of loss.</p>
+  <p style="margin-top: 8px;">Intel Corporation (INTC) — Turnaround Equity Research | Last updated: April 2, 2026</p>
+</div>
+
+</div><!-- /container -->
+</body>
+</html>

@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AVGO — Equity Research | Broadcom Inc.</title>
+<style>
+  :root {
+    --bg: #0a0c10;
+    --card: #12151e;
+    --border: #1e2231;
+    --accent: #c4001a;
+    --accent2: #ef4444;
+    --blue: #3b82f6;
+    --cyan: #06b6d4;
+    --green: #10b981;
+    --red: #ef4444;
+    --amber: #f59e0b;
+    --text: #d1d5db;
+    --muted: #6b7280;
+    --heading: #f3f4f6;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, #0a0a1a 0%, #0d1117 40%, #0a1018 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 60px 40px 48px;
+    text-align: center;
+  }
+  .hero h1 { font-size: 2.8rem; font-weight: 800; color: var(--heading); letter-spacing: -1.5px; margin-bottom: 6px; }
+  .hero .ticker { font-size: 1.3rem; font-weight: 700; color: #a78bfa; margin-bottom: 12px; }
+  .hero .subtitle { font-size: 1.05rem; color: var(--muted); max-width: 700px; margin: 0 auto 24px; }
+  .badge-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+  .badge { display: inline-block; padding: 5px 14px; border-radius: 20px; font-size: 0.78rem; font-weight: 600; }
+  .badge.buy { background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.3); color: var(--green); }
+  .badge.date { background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.2); color: #a5b4fc; }
+  .badge.price { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text); }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 44px 24px; }
+
+  /* Thesis Banner */
+  .thesis-banner {
+    background: linear-gradient(135deg, rgba(16,185,129,0.08), rgba(16,185,129,0.02));
+    border: 1px solid rgba(16,185,129,0.2);
+    border-radius: 16px;
+    padding: 32px 36px;
+    margin-bottom: 48px;
+  }
+  .thesis-banner h2 { font-size: 1.1rem; color: var(--green); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+  .thesis-banner .driver { font-size: 1.35rem; font-weight: 700; color: var(--heading); margin-bottom: 12px; }
+  .thesis-banner p { font-size: 0.95rem; color: var(--text); max-width: 850px; }
+  .thesis-meta { display: flex; gap: 32px; margin-top: 18px; flex-wrap: wrap; }
+  .thesis-meta-item .label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); }
+  .thesis-meta-item .val { font-size: 1.1rem; font-weight: 700; color: var(--heading); }
+  .thesis-meta-item .val.green { color: var(--green); }
+  .thesis-meta-item .val.amber { color: var(--amber); }
+
+  /* KPIs */
+  .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 48px; }
+  .kpi { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 18px; text-align: center; }
+  .kpi .label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 4px; }
+  .kpi .value { font-size: 1.6rem; font-weight: 700; color: var(--heading); }
+  .kpi .delta { font-size: 0.78rem; margin-top: 2px; }
+  .kpi .delta.up { color: var(--green); }
+  .kpi .delta.down { color: var(--red); }
+  .kpi .delta.neutral { color: var(--amber); }
+
+  /* Sections */
+  section { margin-bottom: 52px; }
+  section > h2 { font-size: 1.5rem; font-weight: 700; color: var(--heading); padding-bottom: 10px; border-bottom: 2px solid var(--accent); display: inline-block; margin-bottom: 6px; }
+  .section-intro { color: var(--muted); margin: 8px 0 20px; font-size: 0.9rem; }
+
+  /* Cards */
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 16px; margin-top: 16px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; transition: border-color 0.2s; }
+  .card:hover { border-color: var(--blue); }
+  .card h3 { font-size: 1.05rem; color: var(--heading); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .card ul { padding-left: 16px; margin-top: 6px; }
+  .card li { font-size: 0.88rem; margin-bottom: 5px; }
+  .tag { display: inline-block; font-size: 0.65rem; padding: 2px 8px; border-radius: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; }
+  .tag.deep { background: rgba(16,185,129,0.15); color: var(--green); }
+  .tag.high { background: rgba(59,130,246,0.15); color: var(--blue); }
+  .tag.driver { background: rgba(239,68,68,0.15); color: var(--red); }
+  .tag.cow { background: rgba(245,158,11,0.15); color: var(--amber); }
+  .tag.growth { background: rgba(6,182,212,0.15); color: var(--cyan); }
+  .tag.risk { background: rgba(239,68,68,0.15); color: var(--red); }
+  .tag.new { background: rgba(167,139,250,0.15); color: #a78bfa; }
+
+  /* Two-col layout */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+  @media (max-width: 768px) { .two-col { grid-template-columns: 1fr; } }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 0.84rem; }
+  th { text-align: left; padding: 10px 12px; background: rgba(255,255,255,0.02); color: var(--muted); font-weight: 600; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); }
+  td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.03); }
+  tr:hover td { background: rgba(59,130,246,0.02); }
+  .td-green { color: var(--green); font-weight: 600; }
+  .td-red { color: var(--red); font-weight: 600; }
+  .td-amber { color: var(--amber); font-weight: 600; }
+  .td-blue { color: var(--blue); font-weight: 600; }
+  .td-muted { color: var(--muted); font-size: 0.8rem; }
+
+  /* Bar charts */
+  .bar-chart { margin: 16px 0; }
+  .bar-row { display: flex; align-items: center; margin-bottom: 8px; }
+  .bar-label { width: 140px; font-size: 0.8rem; color: var(--muted); flex-shrink: 0; }
+  .bar-track { flex: 1; height: 26px; background: rgba(255,255,255,0.03); border-radius: 5px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 5px; display: flex; align-items: center; padding-left: 8px; font-size: 0.72rem; font-weight: 600; color: #fff; min-width: 36px; }
+  .bar-fill.ai-semi { background: linear-gradient(90deg, #a78bfa, #7c3aed); }
+  .bar-fill.non-ai { background: linear-gradient(90deg, #3b82f6, #1d4ed8); }
+  .bar-fill.software { background: linear-gradient(90deg, #06b6d4, #0891b2); }
+  .bar-fill.google { background: linear-gradient(90deg, #10b981, #059669); }
+  .bar-fill.meta { background: linear-gradient(90deg, #3b82f6, #1d4ed8); }
+  .bar-fill.apple { background: linear-gradient(90deg, #a1a1aa, #71717a); }
+  .bar-fill.openai { background: linear-gradient(90deg, #a78bfa, #7c3aed); }
+  .bar-fill.bytedance { background: linear-gradient(90deg, #ef4444, #b91c1c); }
+  .bar-fill.other { background: linear-gradient(90deg, #6b7280, #4b5563); }
+  .bar-fill.avgo { background: linear-gradient(90deg, #a78bfa, #7c3aed); }
+  .bar-fill.mrvl { background: linear-gradient(90deg, #06b6d4, #0891b2); }
+  .bar-fill.others-asic { background: linear-gradient(90deg, #6b7280, #4b5563); }
+  .bar-fill.fy23 { background: linear-gradient(90deg, #3b82f6, #1d4ed8); }
+  .bar-fill.fy24 { background: linear-gradient(90deg, #06b6d4, #0891b2); }
+  .bar-fill.fy25 { background: linear-gradient(90deg, #a78bfa, #7c3aed); }
+  .bar-fill.fy26e { background: linear-gradient(90deg, #10b981, #059669); }
+  .bar-fill.fy27t { background: linear-gradient(90deg, #f59e0b, #d97706); }
+
+  /* Valuation matrix */
+  .val-matrix { overflow-x: auto; }
+  .val-matrix table th, .val-matrix table td { text-align: center; min-width: 80px; }
+  .val-matrix .highlight { background: rgba(16,185,129,0.08); font-weight: 700; color: var(--green); }
+
+  /* Scenario cards */
+  .scenario-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 16px; }
+  @media (max-width: 768px) { .scenario-grid { grid-template-columns: 1fr; } }
+  .scenario { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; text-align: center; }
+  .scenario.bull { border-color: rgba(16,185,129,0.25); }
+  .scenario.base { border-color: rgba(59,130,246,0.25); }
+  .scenario.bear { border-color: rgba(239,68,68,0.25); }
+  .scenario h4 { margin-bottom: 8px; font-size: 1rem; }
+  .scenario .price { font-size: 2rem; font-weight: 800; margin: 8px 0; }
+  .scenario .price.bull { color: var(--green); }
+  .scenario .price.base { color: var(--blue); }
+  .scenario .price.bear { color: var(--red); }
+  .scenario .prob { font-size: 0.78rem; color: var(--muted); margin-bottom: 10px; }
+  .scenario .detail { font-size: 0.82rem; color: var(--muted); text-align: left; margin-top: 12px; }
+  .scenario .detail li { margin-bottom: 4px; }
+  .scenario .updown { font-size: 0.9rem; font-weight: 700; margin-top: 8px; }
+  .scenario .updown.bull { color: var(--green); }
+  .scenario .updown.base { color: var(--blue); }
+  .scenario .updown.bear { color: var(--red); }
+
+  /* Risk gauge */
+  .gauge-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; margin-top: 16px; }
+  .gauge-item { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+  .gauge-item h4 { color: var(--heading); margin-bottom: 6px; font-size: 0.9rem; }
+  .gauge-bar { height: 7px; background: rgba(255,255,255,0.04); border-radius: 4px; margin: 8px 0 5px; overflow: hidden; }
+  .gauge-fill { height: 100%; border-radius: 4px; }
+  .gauge-fill.crit { background: var(--red); }
+  .gauge-fill.hi { background: var(--amber); }
+  .gauge-fill.med { background: var(--blue); }
+  .gauge-fill.lo { background: var(--green); }
+  .gauge-meta { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--muted); }
+  .gauge-desc { font-size: 0.8rem; color: var(--muted); margin-top: 6px; }
+
+  /* Bear case callout */
+  .bear-banner {
+    background: linear-gradient(135deg, rgba(239,68,68,0.07), rgba(239,68,68,0.02));
+    border: 1px solid rgba(239,68,68,0.2);
+    border-radius: 14px;
+    padding: 28px 32px;
+    margin-top: 16px;
+  }
+  .bear-banner h3 { color: var(--red); margin-bottom: 12px; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; }
+  .bear-banner ul { padding-left: 18px; }
+  .bear-banner li { font-size: 0.9rem; margin-bottom: 7px; color: var(--text); }
+
+  /* Recommendation box */
+  .rec-box {
+    background: linear-gradient(135deg, rgba(16,185,129,0.10), rgba(16,185,129,0.03));
+    border: 2px solid rgba(16,185,129,0.35);
+    border-radius: 16px;
+    padding: 36px 40px;
+    margin-top: 16px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 32px;
+    align-items: center;
+  }
+  @media (max-width: 640px) { .rec-box { grid-template-columns: 1fr; } }
+  .rec-box .rec-text h3 { font-size: 1.3rem; color: var(--green); margin-bottom: 8px; }
+  .rec-box .rec-text p { font-size: 0.92rem; color: var(--text); line-height: 1.7; }
+  .rec-box .rec-targets { text-align: center; }
+  .rec-box .rec-targets .big { font-size: 3rem; font-weight: 800; color: var(--green); line-height: 1; }
+  .rec-box .rec-targets .sub { font-size: 0.78rem; color: var(--muted); margin-top: 4px; }
+  .rec-box .rec-targets .range { font-size: 0.88rem; color: var(--text); margin-top: 6px; }
+
+  /* Sensitivity matrix */
+  .sensitivity { overflow-x: auto; }
+  .sensitivity table th, .sensitivity table td { text-align: center; min-width: 70px; font-size: 0.8rem; }
+  .sensitivity .s-low { color: var(--red); }
+  .sensitivity .s-mid { color: var(--amber); }
+  .sensitivity .s-high { color: var(--green); }
+  .sensitivity .s-current { background: rgba(167,139,250,0.12); font-weight: 700; color: #a78bfa; }
+
+  /* Customer revenue build */
+  .customer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 16px; }
+  .cust-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 18px; }
+  .cust-card .cname { font-size: 0.9rem; font-weight: 700; color: var(--heading); margin-bottom: 4px; }
+  .cust-card .crev { font-size: 1.4rem; font-weight: 800; color: var(--heading); }
+  .cust-card .cshare { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+  .cust-card .cnotes { font-size: 0.78rem; color: var(--muted); margin-top: 8px; border-top: 1px solid var(--border); padding-top: 8px; }
+  .cust-card.google { border-left: 3px solid var(--green); }
+  .cust-card.meta { border-left: 3px solid var(--blue); }
+  .cust-card.apple { border-left: 3px solid #a1a1aa; }
+  .cust-card.openai { border-left: 3px solid #a78bfa; }
+  .cust-card.bytedance { border-left: 3px solid var(--red); }
+  .cust-card.other5 { border-left: 3px solid var(--cyan); }
+
+  /* AI revenue ramp chart */
+  .ai-ramp { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-top: 16px; }
+  .ai-ramp h3 { color: var(--heading); margin-bottom: 16px; font-size: 1rem; }
+  .ramp-row { display: flex; align-items: center; margin-bottom: 10px; }
+  .ramp-year { width: 80px; font-size: 0.82rem; font-weight: 600; color: var(--heading); flex-shrink: 0; }
+  .ramp-track { flex: 1; height: 30px; background: rgba(255,255,255,0.03); border-radius: 5px; overflow: hidden; }
+  .ramp-fill { height: 100%; border-radius: 5px; display: flex; align-items: center; padding-left: 10px; font-size: 0.75rem; font-weight: 700; color: #fff; }
+
+  /* Sources */
+  .sources { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-top: 32px; }
+  .sources h3 { color: var(--heading); margin-bottom: 10px; font-size: 0.9rem; }
+  .sources a { color: var(--cyan); text-decoration: none; font-size: 0.78rem; display: block; margin-bottom: 4px; }
+  .sources a:hover { text-decoration: underline; }
+  .footer { text-align: center; padding: 36px 20px; border-top: 1px solid var(--border); margin-top: 36px; }
+  .footer p { font-size: 0.75rem; color: var(--muted); }
+
+  @media (max-width: 640px) {
+    .hero h1 { font-size: 1.8rem; }
+    .hero { padding: 36px 18px 28px; }
+    .cards { grid-template-columns: 1fr; }
+    .kpi-row { grid-template-columns: 1fr 1fr; }
+    .scenario-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="ticker">NASDAQ: AVGO</div>
+  <h1>Broadcom Inc.</h1>
+  <p class="subtitle">The dominant custom AI silicon architect — ~70% ASIC market share, 6 hyperscaler customers, $73B AI backlog, and a credible $100B FY2027 AI chip revenue target.</p>
+  <div class="badge-row">
+    <span class="badge buy">BUY — High Conviction</span>
+    <span class="badge price">~$300 (Apr 2, 2026)</span>
+    <span class="badge date">Base Target: $460 | Bull: $550</span>
+    <span class="badge date">Consensus: $431–$458</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- THESIS DRIVER -->
+<div class="thesis-banner">
+  <h2>Thesis Driver</h2>
+  <div class="driver">Broadcom is not an AI infrastructure bet — it IS the AI infrastructure. Its custom ASIC franchises are locked in 3–5 year co-design cycles with the world's largest AI spenders, making it the only company capable of delivering $100B in AI chip revenue by FY2027.</div>
+  <p>With ~70% custom ASIC market share, 6 confirmed hyperscaler customers (Google, Meta, Apple, OpenAI, ByteDance, unnamed 5th), and a $73B AI order backlog representing 18 months of forward revenue visibility, Broadcom has structurally detached from the commodity chip cycle. VMware's software segment adds a recurring $27B+ revenue base at 93% gross margin. Hock Tan's track record of disciplined M&amp;A and consistent beat-and-raise execution is among the best in semiconductors.</p>
+  <div class="thesis-meta">
+    <div class="thesis-meta-item">
+      <div class="label">Conviction</div>
+      <div class="val green">High</div>
+    </div>
+    <div class="thesis-meta-item">
+      <div class="label">Target Year</div>
+      <div class="val">FY 2027–28</div>
+    </div>
+    <div class="thesis-meta-item">
+      <div class="label">Moat Rating</div>
+      <div class="val green">Deep</div>
+    </div>
+    <div class="thesis-meta-item">
+      <div class="label">Mgmt Credibility</div>
+      <div class="val green">High</div>
+    </div>
+    <div class="thesis-meta-item">
+      <div class="label">AI Backlog</div>
+      <div class="val amber">$73B</div>
+    </div>
+    <div class="thesis-meta-item">
+      <div class="label">Next Catalyst</div>
+      <div class="val">Q2 FY2026 ER</div>
+    </div>
+  </div>
+</div>
+
+<!-- KPI ROW -->
+<div class="kpi-row">
+  <div class="kpi">
+    <div class="label">Q1 FY2026 Revenue</div>
+    <div class="value">$19.3B</div>
+    <div class="delta up">+29% YoY — Record</div>
+  </div>
+  <div class="kpi">
+    <div class="label">Q2 FY2026 Guide</div>
+    <div class="value">~$22.0B</div>
+    <div class="delta up">+$1.4B vs. consensus</div>
+  </div>
+  <div class="kpi">
+    <div class="label">Q1 AI Semi Revenue</div>
+    <div class="value">$8.4B</div>
+    <div class="delta up">+106% YoY</div>
+  </div>
+  <div class="kpi">
+    <div class="label">Q2 AI Semi Guide</div>
+    <div class="value">$10.7B</div>
+    <div class="delta up">+27% QoQ</div>
+  </div>
+  <div class="kpi">
+    <div class="label">Adj. EBITDA Margin</div>
+    <div class="value">68%</div>
+    <div class="delta up">$13.1B in Q1</div>
+  </div>
+  <div class="kpi">
+    <div class="label">Software Gross Margin</div>
+    <div class="value">93%</div>
+    <div class="delta up">Op. Margin 78%</div>
+  </div>
+  <div class="kpi">
+    <div class="label">FY2025 FCF</div>
+    <div class="value">$26.9B</div>
+    <div class="delta up">42% FCF Margin</div>
+  </div>
+  <div class="kpi">
+    <div class="label">Market Cap</div>
+    <div class="value">~$1.52T</div>
+    <div class="delta neutral">30x Fwd PE</div>
+  </div>
+</div>
+
+<!-- SECTION: Q1 RESULTS & Q2 GUIDE -->
+<section>
+  <h2>Q1 FY2026 Results &amp; Q2 Guide</h2>
+  <p class="section-intro">Reported February 2026. Broadcom delivered a clean beat across all metrics with Q2 guidance that exceeded Street consensus by $1.4B — the most significant guidance beat in the company's post-VMware era.</p>
+
+  <div class="two-col">
+    <div class="card">
+      <h3>Q1 FY2026 Revenue Decomposition</h3>
+      <div class="bar-chart">
+        <div class="bar-row">
+          <div class="bar-label">AI Semiconductors</div>
+          <div class="bar-track"><div class="bar-fill ai-semi" style="width:87%">$8.4B (+106%)</div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Non-AI Semi</div>
+          <div class="bar-track"><div class="bar-fill non-ai" style="width:43%">~$4.1B</div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Infra Software</div>
+          <div class="bar-track"><div class="bar-fill software" style="width:70%">$6.8B (+1%)</div></div>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr><th>Segment</th><th>Revenue</th><th>% Mix</th><th>YoY</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Semiconductor Solutions</td><td class="td-green">$12.5B</td><td>65%</td><td class="td-green">+52%</td></tr>
+          <tr><td>&nbsp;&nbsp;AI Semiconductors</td><td class="td-green">$8.4B</td><td>44%</td><td class="td-green">+106%</td></tr>
+          <tr><td>&nbsp;&nbsp;Non-AI Semi</td><td>~$4.1B</td><td>21%</td><td class="td-muted">Stable</td></tr>
+          <tr><td>Infrastructure Software</td><td>$6.8B</td><td>35%</td><td class="td-amber">+1%</td></tr>
+          <tr><td><strong>Total Revenue</strong></td><td class="td-green"><strong>$19.31B</strong></td><td>100%</td><td class="td-green"><strong>+29%</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>Q2 FY2026 Guidance vs. Consensus</h3>
+      <table>
+        <thead>
+          <tr><th>Metric</th><th>Guide</th><th>vs. Consensus</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Total Revenue</td><td class="td-green">~$22.0B</td><td class="td-green">+$1.4B beat</td></tr>
+          <tr><td>AI Semi Revenue</td><td class="td-green">$10.7B</td><td class="td-green">+27% QoQ</td></tr>
+          <tr><td>Semi Solutions</td><td class="td-green">$14.8B</td><td class="td-green">+18% QoQ</td></tr>
+          <tr><td>Adj. EBITDA Margin</td><td>~68%</td><td class="td-muted">In-line</td></tr>
+        </tbody>
+      </table>
+      <div style="margin-top:16px">
+        <div class="bar-row">
+          <div class="bar-label">Q1 FY2026</div>
+          <div class="bar-track"><div class="bar-fill ai-semi" style="width:66%">$19.3B</div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Q2 FY2026 (E)</div>
+          <div class="bar-track"><div class="bar-fill fy26e" style="width:80%">$22.0B</div></div>
+        </div>
+      </div>
+      <p style="font-size:0.82rem;color:var(--muted);margin-top:10px">Management noted AI revenue run-rate tracking toward $40B+ for FY2026E. Hock Tan explicitly reaffirmed the $100B FY2027 AI chip revenue target on the call.</p>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <h3>Income Statement Snapshot (Non-GAAP)</h3>
+    <table>
+      <thead>
+        <tr><th>Metric</th><th>Q1 FY2026</th><th>Q4 FY2025</th><th>Q1 FY2025</th><th>YoY Delta</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Revenue</td><td class="td-green">$19.31B</td><td>$14.92B</td><td>$14.92B</td><td class="td-green">+29%</td></tr>
+        <tr><td>Semiconductor Solutions</td><td class="td-green">$12.5B</td><td>$8.23B</td><td>$8.23B</td><td class="td-green">+52%</td></tr>
+        <tr><td>Infrastructure Software</td><td>$6.8B</td><td>$6.73B</td><td>$6.73B</td><td class="td-amber">+1%</td></tr>
+        <tr><td>Non-GAAP EPS</td><td class="td-green">$2.05</td><td>$1.42</td><td>$1.42</td><td class="td-green">+44%</td></tr>
+        <tr><td>Adj. EBITDA</td><td class="td-green">$13.13B</td><td>~$10.1B</td><td>~$10.1B</td><td class="td-green">+30%</td></tr>
+        <tr><td>EBITDA Margin</td><td>68%</td><td>68%</td><td>~68%</td><td class="td-muted">Stable</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- SECTION: AI CUSTOM SILICON ENGINE -->
+<section>
+  <h2>AI Custom Silicon Engine</h2>
+  <p class="section-intro">Broadcom's ASIC business is the core thesis. With ~70% custom silicon market share and multi-year co-design contracts, the company has essentially pre-sold its capacity to the world's most capex-aggressive hyperscalers.</p>
+
+  <div class="ai-ramp">
+    <h3>AI Semiconductor Revenue Ramp ($B)</h3>
+    <div class="ramp-row">
+      <div class="ramp-year">FY2023</div>
+      <div class="ramp-track"><div class="ramp-fill fy23" style="width:12%">~$6B</div></div>
+    </div>
+    <div class="ramp-row">
+      <div class="ramp-year">FY2024</div>
+      <div class="ramp-track"><div class="ramp-fill fy24" style="width:24%">~$12.2B</div></div>
+    </div>
+    <div class="ramp-row">
+      <div class="ramp-year">FY2025</div>
+      <div class="ramp-track"><div class="ramp-fill fy25" style="width:40%">$19.9B (+63%)</div></div>
+    </div>
+    <div class="ramp-row">
+      <div class="ramp-year">FY2026E</div>
+      <div class="ramp-track"><div class="ramp-fill fy26e" style="width:81%">~$40.4B (+103%) — Mizuho est.</div></div>
+    </div>
+    <div class="ramp-row">
+      <div class="ramp-year">FY2027T</div>
+      <div class="ramp-track"><div class="ramp-fill fy27t" style="width:100%">$100B (Hock Tan Target)</div></div>
+    </div>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <h3>ASIC Market Position <span class="tag deep">~70% Share</span></h3>
+      <div class="bar-chart" style="margin-top:12px">
+        <div class="bar-row">
+          <div class="bar-label">Broadcom</div>
+          <div class="bar-track"><div class="bar-fill avgo" style="width:70%">~70%</div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Marvell</div>
+          <div class="bar-track"><div class="bar-fill mrvl" style="width:20%">~20%</div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Others</div>
+          <div class="bar-track"><div class="bar-fill others-asic" style="width:10%">~10%</div></div>
+        </div>
+      </div>
+      <ul style="margin-top:10px">
+        <li>Co-design cycles span <strong>3–5 years</strong> — lock-in is structural</li>
+        <li>Proprietary SerDes IP, Tomahawk switch ASICs, Jericho routing</li>
+        <li>Switching cost = 2–3 year redesign cycle for any customer defection</li>
+        <li>ASIC vs. NVIDIA GPU: different market — inference vs. training</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>AI Order Backlog &amp; Visibility <span class="tag growth">$73B</span></h3>
+      <ul>
+        <li><strong>$73B backlog</strong> represents ~18 months of forward delivery visibility</li>
+        <li>Backlog grew &gt;50% YoY as of Q1 FY2026 earnings call</li>
+        <li>Structured as take-or-pay agreements with hyperscalers</li>
+        <li>Implies annualized AI revenue run-rate of ~$49B on current book</li>
+        <li>Q2 FY2026 AI guide of $10.7B alone = $42.8B annualized run-rate</li>
+        <li>OpenAI ramp (mass production late 2026) not yet in backlog numbers</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Competitive Moat <span class="tag deep">Deep</span></h3>
+      <ul>
+        <li><strong>SerDes/networking IP:</strong> Broadcom's Tomahawk and Jericho switch chips are the de-facto standard in hyperscale data centers — customers buy the whole stack</li>
+        <li><strong>Co-design depth:</strong> Broadcom engineers are embedded in Google, Meta, and Apple chip design teams — cannot be replicated quickly</li>
+        <li><strong>Scale advantage:</strong> At $40B+ AI revenue, R&amp;D amortization per customer is vastly superior to any challenger</li>
+        <li><strong>TSMC partnership:</strong> Priority access to N3/N2 process nodes for AI ASIC production</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>vs. NVIDIA: Coexistence, Not Competition <span class="tag high">Context</span></h3>
+      <ul>
+        <li><strong>NVIDIA dominates training:</strong> H100/B200/B300 GPUs for large model training runs</li>
+        <li><strong>Broadcom serves inference:</strong> Custom ASICs optimized for specific model architectures at lower power/cost per inference token</li>
+        <li><strong>Hyperscaler math:</strong> At scale, custom silicon is 2–5x more efficient than general-purpose GPUs for inference workloads</li>
+        <li><strong>The threat:</strong> NVIDIA's NVLink Fusion + Marvell ($2B investment, Apr 1 2026) attempts to enter ASIC integration — a real but 2–3yr risk</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION: CUSTOMER REVENUE BUILD -->
+<section>
+  <h2>Customer Revenue Build</h2>
+  <p class="section-intro">Broadcom's AI revenue is highly concentrated. Understanding individual customer trajectories is essential to evaluating both the $100B target and the key risk (Google concentration).</p>
+
+  <div class="customer-grid">
+    <div class="cust-card google">
+      <div class="cname">Google / Alphabet</div>
+      <div class="crev">$14–20B</div>
+      <div class="cshare">FY2026E AI Semi Contribution</div>
+      <div class="cnotes">Largest customer. TPU Ironwood (latest gen) designed with Broadcom. Estimated 35–50%+ of AI semi revenue. Customer since TPU v1. Key risk: Google insourcing.</div>
+    </div>
+    <div class="cust-card meta">
+      <div class="cname">Meta Platforms</div>
+      <div class="crev">$6–10B</div>
+      <div class="cshare">FY2026E AI Semi Contribution</div>
+      <div class="cnotes">2nd largest AI customer. MTIA (Meta Training &amp; Inference Accelerator) in mass production. Ramping aggressively for Llama inference at hyperscale. Named publicly.</div>
+    </div>
+    <div class="cust-card apple">
+      <div class="cname">Apple</div>
+      <div class="crev">~$5–8B</div>
+      <div class="cshare">Custom AI chip + WiFi (declining)</div>
+      <div class="cnotes">~16% of total revenue including wireless. New custom AI chip in design. WiFi insourcing risk: ~4.3% revenue impact, already happening. Net: AI offsets wireless decline.</div>
+    </div>
+    <div class="cust-card openai">
+      <div class="cname">OpenAI</div>
+      <div class="crev">~$2–5B</div>
+      <div class="cshare">FY2027E (Mass Production Late 2026)</div>
+      <div class="cnotes">6th confirmed customer (Q1 FY2026). Custom inference engine. $10B+ venture. Mass production starts late 2026. Not yet in backlog. Could be transformative by FY2027.</div>
+    </div>
+    <div class="cust-card bytedance">
+      <div class="cname">ByteDance</div>
+      <div class="crev">Undisclosed</div>
+      <div class="cshare">Named customer — geopolitical risk</div>
+      <div class="cnotes">Publicly named ASIC customer. Export control risk is real — any escalation of China tech restrictions could restrict shipments. Sized as material but not dominant.</div>
+    </div>
+    <div class="cust-card other5">
+      <div class="cname">5th Hyperscaler</div>
+      <div class="crev">Undisclosed</div>
+      <div class="cshare">Unnamed — in production</div>
+      <div class="cnotes">5th customer confirmed in production. Not publicly named. Market speculation points to Microsoft or Amazon. Adds breadth to the customer concentration argument.</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <h3>AI Semi Revenue Concentration (FY2026E ~$40B)</h3>
+    <div class="bar-chart" style="margin-top:12px">
+      <div class="bar-row">
+        <div class="bar-label">Google (est.)</div>
+        <div class="bar-track"><div class="bar-fill google" style="width:43%">~$17B (43%)</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Meta (est.)</div>
+        <div class="bar-track"><div class="bar-fill meta" style="width:20%">~$8B (20%)</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Apple (est.)</div>
+        <div class="bar-track"><div class="bar-fill apple" style="width:15%">~$6B (15%)</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">ByteDance + 5th</div>
+        <div class="bar-track"><div class="bar-fill bytedance" style="width:12%">~$5B (12%)</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">OpenAI (pre-rev)</div>
+        <div class="bar-track"><div class="bar-fill openai" style="width:10%">~$4B (10%)</div></div>
+      </div>
+    </div>
+    <p style="font-size:0.8rem;color:var(--red);margin-top:8px">Warning: Google alone = ~35–50% of AI semi revenue. This concentration is the #1 bear case risk.</p>
+  </div>
+</section>
+
+<!-- SECTION: VMWARE / SOFTWARE -->
+<section>
+  <h2>VMware / Infrastructure Software</h2>
+  <p class="section-intro">VMware was acquired for $61B in November 2023. Initial skepticism has given way to recognition of a masterstroke — the integration has driven software operating margins from 67% to 78% in under two years.</p>
+
+  <div class="cards">
+    <div class="card">
+      <h3>Software Segment Performance <span class="tag cow">Cash Cow</span></h3>
+      <table>
+        <thead>
+          <tr><th>Metric</th><th>FY2025</th><th>FY2026E</th><th>Change</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Infrastructure Software Rev.</td><td>$27B</td><td>&gt;$30B</td><td class="td-green">+Low DD%</td></tr>
+          <tr><td>Gross Margin</td><td>93%</td><td>93%+</td><td class="td-green">Best-in-class</td></tr>
+          <tr><td>Operating Margin</td><td>78%</td><td>~78%+</td><td class="td-green">+11pp vs. 2yrs ago</td></tr>
+          <tr><td>YoY Revenue Growth</td><td>+26%</td><td>&gt;Low DD%</td><td class="td-amber">Decelerating</td></tr>
+          <tr><td>Q1 FY2026 Growth</td><td>—</td><td>+1% YoY</td><td class="td-amber">Slowing notably</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>VMware Integration Scorecard <span class="tag deep">Ahead of Plan</span></h3>
+      <ul>
+        <li><strong>87%</strong> of top 10,000 enterprise customers transitioned to VCF (VMware Cloud Foundation) subscription model</li>
+        <li>Acquisition price: $61B (Nov 2023) — funded with $42B debt</li>
+        <li>Hock Tan playbook: strip non-core assets, raise prices, convert perpetual licenses to subscriptions</li>
+        <li>Operating margin expansion: 67% to 78% in ~2 years</li>
+        <li><strong>Risk:</strong> Aggressive VCF pricing generating customer pushback; +1% Q1 growth suggests pipeline saturation approaching</li>
+        <li>FY2026E target: &gt;$30B — low double-digit growth expected as remaining 13% converts</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION: FINANCIAL PROFILE -->
+<section>
+  <h2>Financial Profile &amp; Capital Allocation</h2>
+  <p class="section-intro">Broadcom's financial model is exceptional: high-margin semiconductor revenue + near-pure-margin software = best-in-class FCF conversion. The balance sheet carries VMware acquisition debt but is well-covered and being paid down rapidly.</p>
+
+  <div class="two-col">
+    <div class="card">
+      <h3>Revenue &amp; Profitability Build</h3>
+      <table>
+        <thead>
+          <tr><th>Metric</th><th>FY2025A</th><th>FY2026E</th><th>FY2027E</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Total Revenue</td><td>~$64B</td><td>~$80B</td><td>~$120B+</td></tr>
+          <tr><td>AI Semi Revenue</td><td>$19.9B</td><td>~$40B</td><td>~$100B (target)</td></tr>
+          <tr><td>Infra Software</td><td>$27B</td><td>&gt;$30B</td><td>~$33B</td></tr>
+          <tr><td>EBITDA Margin</td><td>~68%</td><td>~68%</td><td>~68–70%</td></tr>
+          <tr><td>Non-GAAP EPS</td><td>~$4.97</td><td>~$9.50E</td><td>~$15.00E</td></tr>
+          <tr><td>FCF</td><td>$26.9B</td><td>~$35B</td><td>~$55B+</td></tr>
+          <tr><td>FCF Margin</td><td>42%</td><td>~44%</td><td>~45%+</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>Balance Sheet &amp; Capital Return</h3>
+      <table>
+        <thead>
+          <tr><th>Item</th><th>Current</th><th>Note</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Total Debt</td><td class="td-amber">~$64.2B</td><td class="td-muted">VMware acquisition</td></tr>
+          <tr><td>Debt/Equity</td><td>0.83x</td><td class="td-muted">Manageable</td></tr>
+          <tr><td>Interest Coverage</td><td class="td-green">&gt;9x</td><td class="td-muted">Very comfortable</td></tr>
+          <tr><td>Dividend (annualized)</td><td>$2.60/sh</td><td class="td-muted">14 consecutive increases</td></tr>
+          <tr><td>Buyback (new auth)</td><td>$10B</td><td class="td-muted">+ $7.5B remaining</td></tr>
+          <tr><td>Total Capital Return</td><td class="td-green">$17.5B</td><td class="td-muted">Authorized</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:0.82rem;color:var(--muted);margin-top:10px">At $26.9B FCF, Broadcom can service all debt obligations and return significant capital simultaneously. Debt paydown pace: ~$3–4B/quarter expected in FY2026.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION: VALUATION -->
+<section>
+  <h2>Valuation</h2>
+  <p class="section-intro">At ~$300, AVGO trades at ~30x forward PE (NTM basis). This is not cheap, but reflects a unique combination of AI hypergrowth and high-margin software cash flows. The key question is: can Broadcom achieve the $100B FY2027 AI target?</p>
+
+  <div class="scenario-grid">
+    <div class="scenario bull">
+      <h4>Bull Case</h4>
+      <div class="price bull">$550</div>
+      <div class="prob">Probability: ~30%</div>
+      <div class="updown bull">+83% from current</div>
+      <ul class="detail">
+        <li>FY2027 AI revenue hits $100B+</li>
+        <li>FY2028 non-GAAP EPS ~$18–20</li>
+        <li>30x forward multiple (AI compounder premium)</li>
+        <li>OpenAI ramp + 5th customer exceed expectations</li>
+        <li>VMware growth re-accelerates to mid-teens</li>
+        <li>Debt paid to &lt;$40B, multiple expansion</li>
+      </ul>
+    </div>
+    <div class="scenario base">
+      <h4>Base Case</h4>
+      <div class="price base">$460</div>
+      <div class="prob">Probability: ~50%</div>
+      <div class="updown base">+53% from current</div>
+      <ul class="detail">
+        <li>FY2027 AI revenue ~$75B (25% below target)</li>
+        <li>FY2028 non-GAAP EPS ~$16–18</li>
+        <li>25x forward multiple</li>
+        <li>Google/Meta steady; OpenAI ramp in FY2027</li>
+        <li>Software grows low-double-digits</li>
+        <li>Apple wireless decline offset by AI win</li>
+      </ul>
+    </div>
+    <div class="scenario bear">
+      <h4>Bear Case</h4>
+      <div class="price bear">$280</div>
+      <div class="prob">Probability: ~20%</div>
+      <div class="updown bear">-7% from current</div>
+      <ul class="detail">
+        <li>AI CapEx cycle decelerates sharply post-2026</li>
+        <li>Google begins meaningful insourcing of TPU design</li>
+        <li>FY2027 AI revenue &lt;$50B — target miss by &gt;50%</li>
+        <li>18x forward multiple (de-rating)</li>
+        <li>VMware growth stalls — customer attrition</li>
+        <li>NVIDIA/Marvell ecosystem captures share</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Sensitivity Matrix -->
+  <div class="card" style="margin-top:20px">
+    <h3>Price Target Sensitivity: FY2028 EPS vs. NTM P/E Multiple</h3>
+    <div class="sensitivity">
+      <table>
+        <thead>
+          <tr>
+            <th>EPS / P/E Multiple</th>
+            <th>18x <span class="s-low">(Bear)</span></th>
+            <th>22x</th>
+            <th>25x</th>
+            <th>28x <span class="s-current">(Base)</span></th>
+            <th>32x</th>
+            <th>35x <span class="s-high">(Bull)</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>$12 EPS (Bear)</strong></td>
+            <td class="s-low">$216</td>
+            <td class="s-low">$264</td>
+            <td class="s-mid">$300</td>
+            <td class="s-current">$336</td>
+            <td class="s-mid">$384</td>
+            <td class="s-mid">$420</td>
+          </tr>
+          <tr>
+            <td><strong>$15 EPS</strong></td>
+            <td class="s-low">$270</td>
+            <td class="s-mid">$330</td>
+            <td class="s-mid">$375</td>
+            <td class="s-current">$420</td>
+            <td class="s-high">$480</td>
+            <td class="s-high">$525</td>
+          </tr>
+          <tr>
+            <td><strong>$17 EPS (Base)</strong></td>
+            <td class="s-mid">$306</td>
+            <td class="s-mid">$374</td>
+            <td class="s-high">$425</td>
+            <td class="s-current">$476</td>
+            <td class="s-high">$544</td>
+            <td class="s-high">$595</td>
+          </tr>
+          <tr>
+            <td><strong>$20 EPS (Bull)</strong></td>
+            <td class="s-mid">$360</td>
+            <td class="s-high">$440</td>
+            <td class="s-high">$500</td>
+            <td class="s-current">$560</td>
+            <td class="s-high">$640</td>
+            <td class="s-high">$700</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:0.78rem;color:var(--muted);margin-top:8px">Current price ~$300. Base case lands at $460–$476 using $17 EPS / 28x multiple. Bull case at $550+ using $20 EPS / 28–32x.</p>
+  </div>
+
+  <!-- Comparable Valuation -->
+  <div class="card" style="margin-top:16px">
+    <h3>Peer Valuation Comparison</h3>
+    <div class="val-matrix">
+      <table>
+        <thead>
+          <tr>
+            <th>Company</th>
+            <th>Ticker</th>
+            <th>Mkt Cap</th>
+            <th>Fwd PE</th>
+            <th>EV/EBITDA</th>
+            <th>Revenue Growth</th>
+            <th>FCF Margin</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Broadcom</strong></td>
+            <td class="td-green">AVGO</td>
+            <td>$1.52T</td>
+            <td class="highlight">30x</td>
+            <td>~22x</td>
+            <td class="td-green">+103% AI</td>
+            <td class="td-green">42%</td>
+          </tr>
+          <tr>
+            <td>NVIDIA</td>
+            <td>NVDA</td>
+            <td>~$2.7T</td>
+            <td>35x</td>
+            <td>~28x</td>
+            <td class="td-green">+80%+</td>
+            <td>55%</td>
+          </tr>
+          <tr>
+            <td>Marvell</td>
+            <td>MRVL</td>
+            <td>~$45B</td>
+            <td>22x</td>
+            <td>~18x</td>
+            <td class="td-green">+60%+</td>
+            <td>25%</td>
+          </tr>
+          <tr>
+            <td>Qualcomm</td>
+            <td>QCOM</td>
+            <td>~$130B</td>
+            <td>12x</td>
+            <td>~9x</td>
+            <td>+7%</td>
+            <td>25%</td>
+          </tr>
+          <tr>
+            <td>Texas Instruments</td>
+            <td>TXN</td>
+            <td>~$150B</td>
+            <td>28x</td>
+            <td>~20x</td>
+            <td>-5%</td>
+            <td>28%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:0.82rem;color:var(--muted);margin-top:8px">AVGO at 30x forward PE looks attractive relative to NVIDIA (35x) for an AI compounder with higher FCF margin than MRVL and unparalleled revenue visibility from its $73B backlog.</p>
+  </div>
+</section>
+
+<!-- SECTION: RISKS -->
+<section>
+  <h2>Risk Framework</h2>
+  <p class="section-intro">Risks are quantifiable and mostly known. Key monitoring signals: Google TPU insourcing signals, NVIDIA/Marvell NVLink Fusion product timelines, and AI CapEx guidance from hyperscalers.</p>
+
+  <div class="gauge-row">
+    <div class="gauge-item">
+      <h4>Google Insourcing Risk</h4>
+      <div class="gauge-bar"><div class="gauge-fill hi" style="width:40%"></div></div>
+      <div class="gauge-meta"><span>Probability: ~10%</span><span class="td-amber">Severity: HIGH</span></div>
+      <div class="gauge-desc">Google designs its own TPU architecture but relies on Broadcom for implementation IP and networking. Full insourcing would remove 35–50% of AI semi revenue. Timing: 3–5 years minimum if decision made today.</div>
+    </div>
+    <div class="gauge-item">
+      <h4>NVIDIA / Marvell Ecosystem Threat</h4>
+      <div class="gauge-bar"><div class="gauge-fill med" style="width:60%"></div></div>
+      <div class="gauge-meta"><span>Probability: ~20%</span><span class="td-blue">Severity: MODERATE</span></div>
+      <div class="gauge-desc">NVIDIA's $2B investment in Marvell (Apr 1, 2026) for NVLink Fusion integration is the most credible new competitive threat. Creates alternative custom silicon ecosystem. 2–3yr runway before impact.</div>
+    </div>
+    <div class="gauge-item">
+      <h4>AI CapEx Cycle Deceleration</h4>
+      <div class="gauge-bar"><div class="gauge-fill hi" style="width:55%"></div></div>
+      <div class="gauge-meta"><span>Probability: ~15%</span><span class="td-amber">Severity: HIGH</span></div>
+      <div class="gauge-desc">If hyperscaler CapEx guidance reverses (macro downturn, regulatory action, AI commercialization disappointment), Broadcom's $100B target becomes unachievable. $73B backlog provides 18-month buffer.</div>
+    </div>
+    <div class="gauge-item">
+      <h4>Apple WiFi Insourcing</h4>
+      <div class="gauge-bar"><div class="gauge-fill lo" style="width:65%"></div></div>
+      <div class="gauge-meta"><span>Probability: ~60% (happening)</span><span class="td-green">Severity: LOW</span></div>
+      <div class="gauge-desc">Apple is already insourcing WiFi chips — approximately 4.3% of total AVGO revenue at risk. Apple's new custom AI chip win partially offsets this. Net revenue impact likely &lt;2% over 2 years.</div>
+    </div>
+    <div class="gauge-item">
+      <h4>$100B FY2027 Target Miss</h4>
+      <div class="gauge-bar"><div class="gauge-fill med" style="width:50%"></div></div>
+      <div class="gauge-meta"><span>Probability: ~25%</span><span class="td-blue">Severity: MODERATE</span></div>
+      <div class="gauge-desc">Missing the $100B target by 20–30% would cause multiple compression but not an existential event. Even $70B in AI revenue at 68% EBITDA margins produces a highly valuable company at current valuation.</div>
+    </div>
+    <div class="gauge-item">
+      <h4>ByteDance / Export Control</h4>
+      <div class="gauge-bar"><div class="gauge-fill med" style="width:45%"></div></div>
+      <div class="gauge-meta"><span>Probability: ~30%</span><span class="td-blue">Severity: MODERATE</span></div>
+      <div class="gauge-desc">ByteDance is a named AI ASIC customer. Any escalation in China export restrictions could immediately halt shipments. Revenue exposure undisclosed but flagged as material by management.</div>
+    </div>
+  </div>
+
+  <!-- Mandatory Bear Case -->
+  <div class="bear-banner">
+    <h3>Mandatory Bear Case — The Other Side of the Trade</h3>
+    <ul>
+      <li><strong>58x trailing PE is expensive</strong> — even for a compounder. The market is pricing significant perfection into the FY2027 narrative.</li>
+      <li><strong>Extreme customer concentration:</strong> Google alone is estimated at 35–50% of AI semi revenue. A single design win loss or insourcing decision would be catastrophic to near-term estimates.</li>
+      <li><strong>VMware customer pushback:</strong> Aggressive VCF migration pricing has generated documented enterprise complaints. Software growth decelerated to +1% QoQ in Q1 FY2026 — watch for further deceleration.</li>
+      <li><strong>Software momentum risk:</strong> At 87% VCF conversion, the pool of remaining upsell is shrinking. Software segment growth will naturally decelerate toward 5–8% by FY2027 as conversion completes.</li>
+      <li><strong>$64B debt constrains optionality:</strong> Broadcom cannot pursue major M&amp;A for the next 2–3 years while paying down VMware debt. The next secular shift could require capital it does not have flexibility for.</li>
+      <li><strong>NVIDIA Marvell investment (Apr 1, 2026):</strong> NVLink Fusion is NVIDIA's explicit attempt to build a competing ecosystem for custom silicon integration — existential if it gains traction with hyperscalers.</li>
+      <li><strong>$100B target credibility window:</strong> Hock Tan's FY2027 $100B target requires roughly 2.5x revenue growth in 2 years. Even with backlog visibility, execution risk is real and any quarterly miss will compress the multiple sharply.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- SECTION: MANAGEMENT -->
+<section>
+  <h2>Management &amp; Execution Track Record</h2>
+  <p class="section-intro">Hock Tan is among the most credible semiconductor CEOs of the past two decades. His M&amp;A playbook and operational discipline are a core component of the investment thesis.</p>
+
+  <div class="cards">
+    <div class="card">
+      <h3>Hock Tan — CEO Track Record <span class="tag deep">HIGH Credibility</span></h3>
+      <ul>
+        <li><strong>CEO since 2006</strong> — grew from ~$2B to $64B+ in annual revenue</li>
+        <li>Executed transformative acquisitions: LSI Logic (2014), Avago/Broadcom merger (2016), CA Technologies (2018), Symantec Enterprise (2019), VMware (2023)</li>
+        <li>Consistent beat-and-raise: 14 consecutive dividend increases, multi-year earnings guidance reliability</li>
+        <li>VMware acquisition initially met with deep skepticism (paid 12x revenue); now executing at 78% operating margin — widely viewed as masterstroke</li>
+        <li>Playbook: acquire → cut non-core → raise prices → expand margins → generate cash → repeat</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Key Catalysts to Watch <span class="tag growth">Forward Looking</span></h3>
+      <ul>
+        <li><strong>Q2 FY2026 Earnings:</strong> Will AI semi revenue hit $10.7B? Backlog update critical</li>
+        <li><strong>OpenAI Ramp:</strong> First revenue contribution expected late FY2026 / Q1 FY2027</li>
+        <li><strong>FY2027 Target Reaffirmation:</strong> Any softening of $100B language = multiple compression trigger</li>
+        <li><strong>New Customer #7:</strong> Each new hyperscaler win dramatically expands TAM and reduces concentration risk</li>
+        <li><strong>NVIDIA NVLink Fusion:</strong> Watch for customer adoption — any design win at Google/Meta would be a major negative signal</li>
+        <li><strong>Debt Paydown Progress:</strong> Sub-$50B total debt = multiple expansion catalyst</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION: RECOMMENDATION -->
+<section>
+  <h2>Investment Recommendation</h2>
+
+  <div class="rec-box">
+    <div class="rec-text">
+      <h3>BUY — High Conviction | Base Target: $460 | Bull: $550</h3>
+      <p>At ~$300 per share, Broadcom offers exceptional risk/reward for investors with an 18–24 month time horizon. The combination of (1) structural AI ASIC dominance with $73B in visible backlog, (2) 6-customer diversification actively improving, (3) a near-monopoly software cash flow engine at 93% gross margin, and (4) Hock Tan's execution track record creates a compelling asymmetric setup.</p>
+      <p style="margin-top:10px">The core bear case — Google insourcing — is real but represents a 3–5 year execution risk, not an imminent catalyst. At 30x forward earnings, the market is already pricing in meaningful execution discount vs. the $100B target. The $73B backlog provides hard downside support. Position sizing should reflect the customer concentration risk; this is not a set-and-forget holding.</p>
+      <p style="margin-top:10px">Consensus: Strong Buy, average target $431–$458, range $335–$535 (Wall Street). Our base case of $460 aligns with Street consensus; bull case of $550 assumes successful OpenAI ramp and $100B target achievement.</p>
+    </div>
+    <div class="rec-targets">
+      <div class="big">BUY</div>
+      <div class="sub">Recommendation</div>
+      <div style="margin-top:16px">
+        <div style="font-size:1.5rem;font-weight:700;color:var(--green)">$460</div>
+        <div class="sub">Base Target (FY2028)</div>
+      </div>
+      <div style="margin-top:10px">
+        <div style="font-size:1.1rem;font-weight:700;color:var(--amber)">$550</div>
+        <div class="sub">Bull Target</div>
+      </div>
+      <div style="margin-top:10px">
+        <div style="font-size:1.1rem;font-weight:700;color:var(--red)">$280</div>
+        <div class="sub">Bear Target</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOURCES -->
+<div class="sources">
+  <h3>Sources &amp; References</h3>
+  <a href="https://investors.broadcom.com/news-releases/news-release-details/broadcom-inc-reports-first-quarter-fiscal-year-2026-financial" target="_blank">Broadcom Q1 FY2026 Earnings Release — investors.broadcom.com</a>
+  <a href="https://investors.broadcom.com/events/event-details/broadcom-inc-first-quarter-fiscal-year-2026-financial-results" target="_blank">Broadcom Q1 FY2026 Earnings Call Transcript — investors.broadcom.com</a>
+  <a href="https://investors.broadcom.com/sec-filings/annual-reports" target="_blank">Broadcom FY2025 Annual Report (10-K) — SEC Filing</a>
+  <a href="https://www.wsj.com/business/deals/broadcom-vmware-acquisition-closed" target="_blank">Wall Street Journal: Broadcom Closes $61B VMware Acquisition (Nov 2023)</a>
+  <a href="https://www.reuters.com/technology/broadcom-openai-custom-ai-chip-2025/" target="_blank">Reuters: Broadcom / OpenAI Custom Inference Chip Partnership</a>
+  <a href="https://www.bloomberg.com/news/articles/2026/04/01/nvidia-invests-2-billion-marvell-nvlink-fusion" target="_blank">Bloomberg: NVIDIA $2B Marvell Investment / NVLink Fusion (Apr 1, 2026)</a>
+  <a href="https://www.mizuhogroup.com/securities/research" target="_blank">Mizuho Securities Research: AVGO AI Revenue Forecast ~$40.4B FY2026E</a>
+  <a href="https://finance.yahoo.com/quote/AVGO/analysis/" target="_blank">Yahoo Finance: AVGO Analyst Consensus ($431–$458 avg target, range $335–$535)</a>
+  <a href="https://www.bloomberg.com/news/articles/2025/12/avgo-ai-backlog-73-billion" target="_blank">Bloomberg: Broadcom $73B AI Order Backlog Report</a>
+  <a href="https://www.theverge.com/2025/apple-broadcom-wifi-insourcing" target="_blank">The Verge: Apple WiFi Chip Insourcing from Broadcom</a>
+  <a href="https://www.semiconductorreview.com/broadcom-asic-market-share" target="_blank">Semiconductor Industry Analysis: Custom ASIC Market Share (Broadcom ~70%, Marvell ~20%)</a>
+  <a href="https://investors.broadcom.com/news-releases/news-release-details/broadcom-announces-quarterly-dividend" target="_blank">Broadcom Capital Allocation / 14-Year Dividend Increase History</a>
+  <a href="https://www.google.com/about/products/ai/tpu" target="_blank">Google TPU Ironwood: Custom AI Accelerator Program</a>
+  <a href="https://ai.meta.com/blog/next-generation-meta-training-inference-accelerator-AI-MTIA/" target="_blank">Meta MTIA: Meta Training &amp; Inference Accelerator</a>
+</div>
+
+<div class="footer">
+  <p>This report is for informational purposes only and does not constitute investment advice. All forecasts are estimates based on publicly available data as of April 2, 2026. Past performance is not indicative of future results.</p>
+  <p style="margin-top:6px">Broadcom Inc. (AVGO) Equity Research | April 2, 2026 | AI Infrastructure &amp; Custom Silicon Thesis</p>
+</div>
+
+</div><!-- /container -->
+</body>
+</html>
